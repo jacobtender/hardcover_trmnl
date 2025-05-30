@@ -1,63 +1,18 @@
-<div class="layout layout--col layout--center">
-  <div id="topRow" class="grid grid--cols-1">
-    <div id="userInfo" class="flex flex--center flex--col pb--10">
-      <div class="flex flex--row flex--top gap--medium items--center">
-        <img class="image-dither h--24" style="border-radius: 50%;" src="{{ image }}">
-        <div id="userNameFollows" class="grid grid--cols-1">
-          <span id="profileName" class="value value--small">{{ name }}</span>
-          <div id="followRelationships" class="flex flex--row">
-            <div id="following" class="item">
-              <div class="content flex flex--center">
-                <span class="value value--xsmall value--tnums" data-value-format="true">{{ followed_users_count }}</span>
-                <span class="label">Following</span>
-              </div>
-            </div>
-            <div id="followers" class="item">
-              <div class="content flex flex--center">
-                <span class="value value--xsmall value--tnums" data-value-format="true">{{ followers_count }}</span>
-                <span class="label">Followers</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="w--full b-h-gray-5"></div>
-    
-    <div id="topStats" class="grid grid--cols-2 pt--10">
-      <div class="item">
-        <div class="content flex flex--center">
-          <span class="value value--tnums" data-value-format="true">{{ status_counts.read }}</span>
-          <span class="label">Books Read</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="content flex flex--center">
-          <span class="value value--tnums" data-value-format="true">{{ status_counts.want-to-read }}</span>
-          <span class="label">Want To Read</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="content flex flex--center">
-          <span class="value value--tnums" data-value-format="true">{{ status_counts.currently-reading }}</span>
-          <span class="label">Currently Reading</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="content flex flex--center">
-          <span class="value value--tnums" data-value-format="true">{{ status_counts.did-not-finish }}</span>
-          <span class="label">Did Not Finish</span>
-        </div>
-      </div>
-    </div>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<div class="layout layout--col layout--center gap--space-between">
+  <div id="topRow" class="grid">
+    {% render 'profile', image: image, name: name, username: username, bio: bio, followed_users_count:
+    followed_users_count, followers_count: followers_count %}
+  </div>
+
+  <div class="w--full b-h-gray-5"></div>
+
+  <div id="TopStats" class="grid grid--cols-2">
+    {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
+    {% render 'pill_large', label: "Books Read", count: status_counts.read %}
+    {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
+    {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
   </div>
 </div>
-<div class="title_bar">
-  <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)" src="https://wp.hardcover.app/wp-content/uploads/2023/11/Symbol-Dark.png">
-  <span class="title">Hardcover</span>
-  <span class="instance">{{ name }}</span>
-  {% for i in flair %}
-  <!-- <span class="label label--small label--inverted">{{ i }}</span> -->
-  {% endfor %}
-</div>
+{% render 'title_bar', username: username, flair: flair %}

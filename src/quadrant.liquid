@@ -1,0 +1,12 @@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<div class="layout layout--col layout--center gap--space-between">
+
+  <div id="TopStats" class="grid grid--cols-2">
+    {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
+    {% render 'pill_large', label: "Books Read", count: status_counts.read %}
+    {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
+    {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
+  </div>
+</div>
+{% render 'title_bar', username: username, flair: flair %}

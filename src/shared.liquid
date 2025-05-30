@@ -5,8 +5,9 @@
   }
   .pill {
     border-radius: 5px;
-    background-color: rgb(203, 203, 203);
+    /* background-color: rgb(203, 203, 203); */
     overflow: hidden;
+    gap: 2 !important;
   }
 
   .pill__label {
@@ -16,7 +17,7 @@
   }
 
   .pill__count {
-    background-color: rgb(24, 24, 24);
+    background-color: black;
     color: white;
     min-width: 25px;
     text-align: center;
@@ -30,7 +31,7 @@
   }
 
   .pill_large__count {
-    background-color: rgb(24, 24, 24);
+    background-color: black;
     color: white;
     text-align: center;
     padding: 5px 0;
@@ -39,7 +40,7 @@
 </style>
 
 {% template profile %}
-  <div id="profile" class="flex flex--col pr--1 gap--space-between">
+  <div id="profile" class="flex flex--col">
     <div id="userInfo" class="flex flex--row flex--center gap--medium items--center stretch">
       <img class="image-dither h--24" style="border-radius: 10%;" src="{{ image }}">
       <div id="userMeta" class="grid grid--cols-1 gap--xsmall">
@@ -47,6 +48,7 @@
         <span id="bio" class="description clamp--4">{{ bio }}</span>
       </div>
     </div>
+
     <div id="followRelationships" class="flex flex--row flex--left w-full">
       {% render 'pill', label: "Following", count: followed_users_count %}
       {% render 'pill', label: "Followers", count: followers_count %}
@@ -55,19 +57,19 @@
 {% endtemplate %}
 
 {% template pill %}
-  <div class="pill flex flex--row flex--right gap--[5px] stretch">
-    <span class="pill__label value value--xxsmall stretch">{{ label }}</span>
+  <div class="pill flex flex--row flex--right gap--[5px] stretch bg--gray-6">
+    <span class="pill__label value value--xxsmall text-stroke stretch">{{ label }}</span>
     <span class="pill__count value value--xxsmall value--tnums" data-value-format="true">{{ count }}</span>
   </div>
 {% endtemplate %}
 
 {% template pill_large %}
-<div class="pill flex flex--col gap--[5px]">
-  <div class="pill_large__count">
-    <span class="value value--small value--tnums" data-value-format="true">{{ count }}</span>
+  <div class="pill flex flex--col gap--[5px] bg--gray-6">
+    <div class="pill_large__count">
+      <span class="value value--small value--tnums" data-value-format="true">{{ count }}</span>
+    </div>
+    <span class="pill_large__label value value--xxsmall text-stroke">{{ label }}</span>
   </div>
-  <span class="pill_large__label value value--xxsmall">{{ label }}</span>
-</div>
 {% endtemplate %}
 
 {% template title_bar %}
