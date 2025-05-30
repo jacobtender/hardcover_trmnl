@@ -1,0 +1,31 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://api.tender.wtf/hc/stats?username={{ username }}&bearer={{ bearer-token }}
+polling_headers: ''
+id: 63345
+custom_fields:
+- keyname: username
+  field_type: string
+  name: Username
+  description: The Letterboxd username to fetch stats for.
+  placeholder: jacob
+- keyname: bearerToken
+  field_type: string
+  name: Bearer Token
+  description: Copy value from https://hardcover.app/account/api
+  placeholder: Bearer xxx
+- keyname: featuredArea
+  field_type: select
+  options:
+  - Goals # value will be 'goals'
+  - Last 4 Read # value will be 'last_4_read'
+  - Currently Reading # value will be 'currently_reading'
+  default: goals
+  name: Featured Area
+  description: Select the information to display in the featured area.
+name: Hardcover Stats
+refresh_interval: 360

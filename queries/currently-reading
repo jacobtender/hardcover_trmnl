@@ -1,0 +1,118 @@
+query MyQuery {
+  me {
+    user_books(where: {status_id: {_eq: 2}}) {
+      book {
+        title
+        image {
+          url
+        }
+        pages
+      }
+      last_read_date
+      user_book_status {
+        status
+      }
+      edition {
+        edition_format
+        edition_information
+        reading_format {
+          format
+          id
+        }
+      }
+    }
+  }
+  reading_formats {
+    format
+    id
+  }
+}
+
+
+{
+  "data": {
+    "me": [
+      {
+        "user_books": [
+          {
+            "book": {
+              "title": "A Confederacy of Dunces",
+              "image": {
+                "url": "https://assets.hardcover.app/edition/12157419/267b596a0c2d11a49e029f36ee194569311035ff.jpeg"
+              },
+              "pages": 338
+            },
+            "last_read_date": null,
+            "user_book_status": {
+              "status": "Currently Reading"
+            },
+            "edition": {
+              "id": 12157419,
+              "edition_format": "Hardcover",
+              "edition_information": "",
+              "reading_format": {
+                "format": "Read",
+                "id": 1
+              }
+            }
+          },
+          {
+            "book": {
+              "title": "The Well of Ascension",
+              "image": {
+                "url": "https://assets.hardcover.app/editions/30432880/4976353406733212.jpg"
+              },
+              "pages": 624
+            },
+            "last_read_date": null,
+            "user_book_status": {
+              "status": "Currently Reading"
+            },
+            "edition": {
+              "id": 30654957,
+              "edition_format": "Audiobook",
+              "edition_information": "",
+              "reading_format": {
+                "format": "Listened",
+                "id": 2
+              }
+            }
+          },
+          {
+            "book": {
+              "title": "The Hole",
+              "image": {
+                "url": "https://assets.hardcover.app/editions/30652894/a7e7cb7a-e8d3-4b0d-9cf3-8e182eebbcb6.jpg"
+              },
+              "pages": 61
+            },
+            "last_read_date": null,
+            "user_book_status": {
+              "status": "Currently Reading"
+            },
+            "edition": {
+              "id": 30652894,
+              "edition_format": "Kindle",
+              "edition_information": "",
+              "reading_format": null
+            }
+          }
+        ]
+      }
+    ],
+    "reading_formats": [
+      {
+        "format": "Read",
+        "id": 1
+      },
+      {
+        "format": "Listened",
+        "id": 2
+      },
+      {
+        "format": "Both",
+        "id": 3
+      }
+    ]
+  }
+}

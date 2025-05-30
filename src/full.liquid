@@ -1,0 +1,130 @@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<div class="layout layout--col layout--left gap--space-between">
+  <div id="topRow" class="grid grid--cols-2">
+    {% render 'profile', image: image, name: name, username: username, bio: bio, followed_users_count: followed_users_count, followers_count: followers_count %}
+
+    <div id="TopStats" class="grid grid--cols-2">
+      {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
+      {% render 'pill_large', label: "Books Read", count: status_counts.read %}
+      {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
+      {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
+    </div>
+  </div>
+
+<!-- <div class="w--full b-h-gray-5"></div> -->
+
+  <div id="bottomRow" class="grid grid--cols-1">
+    {% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
+      {% render 'goals', goals: goals %}
+    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'last_4_read' %}
+      {% render 'last_4_read', last_4_read: last_4_read %}
+    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
+      {% render 'currently_reading', currently_reading: currently_reading %}
+    {% else %}
+      <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>
+    {% endif %}
+  </div>
+</div>
+
+{% render 'title_bar', username: username, flair: flair %}
+
+
+<script type="text/javascript">
+  var testData = {{ goals | json }}
+
+  // Sort the testData array by the ratio of read to goal in descending order
+  testData.sort((a, b) => (b.read / b.goal) - (a.read / a.goal));
+  testData = testData.slice(0, 6); // Limit to top 6 items
+
+  // Extract categories and data for Highcharts
+  // categories are the titles of the goals
+  const categories = testData.map(goal => goal.title);
+  const data = testData.map(goal => ({
+    // y: Math.min(Math.round((goal.read / goal.goal) * 100), 100),
+    y: Math.min((goal.read / goal.goal) * 100),
+    label: `${goal.read}/${goal.goal} books`
+  }));
+
+
+  // Initialize chart with bar/column configuration for 4 series
+  Highcharts.chart('progress', {
+    chart: {
+      animation: false,
+      type: 'bar',
+      height: 200,
+      spacing: [0, 0, 0, 0], // top, right, bottom, left
+      renderTo: 'container',
+    },
+    title: {
+      text: null
+    },
+    legend: {
+      enabled: false
+    },
+    tooltip: {
+      enabled: false // Disable hover tooltips
+    },
+    xAxis: {
+      categories: categories,
+      title: { text: null },
+      labels: {
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          padding: 0
+        }
+      },
+      lineWidth: 0
+    },
+    yAxis: {
+      min: 0,
+      max: 100,
+      title: { text: 'Progress' },
+      labels: { 
+        format: '{value}%',
+      },
+      visible: false,
+    },
+    plotOptions: {
+      series: {
+        pointWidth: 30,
+        animation: false,
+        enableMouseTracking: false,
+        states: {
+          inactive: {
+            opacity: 1 // Prevent dimming of other series on hover
+          },
+          hover: {
+            enabled: false // Disable hover state styling
+          }
+        },
+        stacking: 'normal',
+        dataLabels: {
+          enabled: true,
+          useHTML: true,
+          style: {
+            fontSize: '16px',
+          },
+          formatter: function () {
+            if (this.point.y === 0) {
+              return `<span style="padding-left: 5px;">Not Yet Started</span>`;
+            }
+            return `<span class="text" data-pixel-perfect="true">${this.point.label} (${this.y}%)</span>`;
+          }
+        }
+      }
+    },
+    series: [{
+      name: 'Progress',
+      color: '#000',
+      data: data
+    }],
+    credits: {
+      enabled: false
+    },
+    exporting: {
+      enabled: false
+    },
+  });
+</script>
