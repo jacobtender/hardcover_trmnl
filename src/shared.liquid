@@ -37,6 +37,20 @@
     padding: 5px 0;
     width: 100%;
   }
+
+  .book__image {
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    /* max-width: 90px; */
+    object-fit: contain;
+  }
+
+  .rating-stars i {
+    font-size: .6rem;
+  }
+  
+
 </style>
 
 {% template profile %}
@@ -91,12 +105,142 @@
     <div class="w--full b-h-gray-5 col--span-3"></div>
     <div id="progress" class="row row--start col--span-3 w-full" style=""></div>
   </div>
+  <script type="text/javascript">
+    var testData = {{ goals | json }}
+
+    // Sort the testData array by the ratio of read to goal in descending order
+    testData.sort((a, b) => (b.read / b.goal) - (a.read / a.goal));
+    testData = testData.slice(0, 6); // Limit to top 6 items
+
+    // Extract categories and data for Highcharts
+    // categories are the titles of the goals
+    const categories = testData.map(goal => goal.title);
+    const data = testData.map(goal => ({
+      // y: Math.min(Math.round((goal.read / goal.goal) * 100), 100),
+      y: Math.min((goal.read / goal.goal) * 100),
+      label: `${goal.read}/${goal.goal} books`
+    }));
+
+
+    // Initialize chart with bar/column configuration for 4 series
+    Highcharts.chart('progress', {
+      chart: {
+        animation: false,
+        type: 'bar',
+        height: 200,
+        spacing: [0, 0, 0, 0], // top, right, bottom, left
+        renderTo: 'container',
+      },
+      title: {
+        text: null
+      },
+      legend: {
+        enabled: false
+      },
+      tooltip: {
+        enabled: false // Disable hover tooltips
+      },
+      xAxis: {
+        categories: categories,
+        title: { text: null },
+        labels: {
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            padding: 0
+          }
+        },
+        lineWidth: 0
+      },
+      yAxis: {
+        min: 0,
+        max: 100,
+        title: { text: 'Progress' },
+        labels: { 
+          format: '{value}%',
+        },
+        visible: false,
+      },
+      plotOptions: {
+        series: {
+          pointWidth: 30,
+          animation: false,
+          enableMouseTracking: false,
+          states: {
+            inactive: {
+              opacity: 1 // Prevent dimming of other series on hover
+            },
+            hover: {
+              enabled: false // Disable hover state styling
+            }
+          },
+          stacking: 'normal',
+          dataLabels: {
+            enabled: true,
+            useHTML: true,
+            style: {
+              fontSize: '16px',
+            },
+            formatter: function () {
+              if (this.point.y === 0) {
+                return `<span style="padding-left: 5px;">Not Yet Started</span>`;
+              }
+              return `<span class="text" data-pixel-perfect="true">${this.point.label} (${this.y}%)</span>`;
+            }
+          }
+        }
+      },
+      series: [{
+        name: 'Progress',
+        color: '#000',
+        data: data
+      }],
+      credits: {
+        enabled: false
+      },
+      exporting: {
+        enabled: false
+      },
+    });
+  </script>
 {% endtemplate %}
 
-{% template last_4_read %}
-<span class="label col--span-2 col--center" data-pixel-perfect="true">Last 4 Read</span>
-{% endtemplate %}
+{% template bookshelf %}
+  <div class="grid grid--cols-3">
+    <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span>
+    <div class="w--full b-h-gray-5 col--span-3"></div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-{% template currently_reading %}
-<span class="label col--span-2 col--center" data-pixel-perfect="true">Currently Reading</span>
+    <div class="grid col--center col--span-3 gap--medium h--auto">
+      {% for book in books limit:7 %}
+        <div class="book">
+          <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither">
+          {% if book.rating != nil and book.rating != '' %}
+            <span class="book__rating stars flex flex--row flex--center-x">
+              {% assign rating = book.rating | plus: 0 %}
+              {% assign full_stars = rating | floor %}
+              {% assign has_half = rating | modulo: 1 %}
+              {% assign half_star = 0 %}
+              {% if has_half >= 0.5 %}
+                {% assign half_star = 1 %}
+              {% endif %}
+              {% assign empty_stars = 5 | minus: full_stars | minus: half_star %}
+
+              <span class="rating-stars">
+                {% for i in (1..full_stars) %}
+                  <i class="fas fa-star"></i>
+                {% endfor %}
+                {% if half_star == 1 %}
+                  <i class="fas fa-star-half-alt"></i>
+                {% endif %}
+                {% for i in (1..empty_stars) %}
+                  <i class="far fa-star"></i>
+                {% endfor %}
+              </span>
+            </span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endtemplate %}
