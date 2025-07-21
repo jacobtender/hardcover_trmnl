@@ -1,0 +1,31 @@
+query SeriesContributionsForAuthor {
+  series(where: {
+    slug: {_eq:"the-riyria-chronicles"}
+    book_series:{
+      book: {
+        book_status_id: { _eq: 1},
+        compilation: { _eq: false},
+        contributions: { author_id: { _eq: 183387 } }
+      }
+    }
+  }
+  ) {
+    id
+    name
+    books_count
+    book_series {
+      book {
+        id
+        title
+        slug
+        contributions {
+          contributable_type
+          author {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}
