@@ -25,4 +25,15 @@
   </div>
 </div>
 
-{% render 'title_bar', username: username, flair: flair %}
+{% assign title = '' %}
+{% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
+  {% assign title = 'Goals' %}
+{% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
+  {% assign title = 'Recently Read' %}
+{% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
+  {% assign title = 'Currently Reading' %}
+{% else %}
+  {% assign title = 'Featured Area Not Set' %}
+{% endif %}
+
+{% render 'title_bar', username: username, flair: flair, title: title %}

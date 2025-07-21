@@ -41,16 +41,14 @@
   .book__image {
     width: 100%;
     height: auto;
-    max-height: 140px;
+    max-height: 250px;
     /* max-width: 90px; */
     object-fit: contain;
   }
 
   .rating-stars i {
-    font-size: .6rem;
+    font-size: .75rem;
   }
-  
-
 </style>
 
 {% template profile %}
@@ -90,7 +88,7 @@
 <div class="title_bar">
   <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)"
     src="https://wp.hardcover.app/wp-content/uploads/2023/11/Symbol-Dark.png">
-  <span class="title">Hardcover</span>
+  <span class="title">Hardcover - {{ title }}</span>
   <span class="instance">@{{ username }}</span>
   {% for i in flair %}
   <span class="label label--small label--inverted">{{ i }}</span>
@@ -185,7 +183,8 @@
               if (this.point.y === 0) {
                 return `<span style="padding-left: 5px;">Not Yet Started</span>`;
               }
-              return `<span class="text" data-pixel-perfect="true">${this.point.label} (${this.y}%)</span>`;
+              const rounded = Math.round(this.y);
+              return `<span class="text" data-pixel-perfect="true">${this.point.label} (${rounded}%)</span>`;
             }
           }
         }
@@ -207,12 +206,12 @@
 
 {% template bookshelf %}
   <div class="grid grid--cols-3">
-    <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span>
-    <div class="w--full b-h-gray-5 col--span-3"></div>
+    {% comment %} <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span> {% endcomment %}
+    {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <div class="grid col--center col--span-3 gap--medium h--auto">
-      {% for book in books limit:7 %}
+      {% for book in books limit:5 %}
         <div class="book">
           <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither">
           {% if book.rating != nil and book.rating != '' %}
@@ -226,7 +225,7 @@
               {% endif %}
               {% assign empty_stars = 5 | minus: full_stars | minus: half_star %}
 
-              <span class="rating-stars">
+              <span class="rating-stars" data-pixel-perfect="true">
                 {% for i in (1..full_stars) %}
                   <i class="fas fa-star"></i>
                 {% endfor %}
