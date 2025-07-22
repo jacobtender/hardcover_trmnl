@@ -12,28 +12,25 @@
     </div>
   </div>
 
+  {% assign title = '' %}
   <div id="bottomRow" class="grid grid--cols-1">
     {% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
+      {% assign title = 'Goals' %}
       {% render 'goals', goals: goals %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
+      {% assign title = 'Recently Read' %}
       {% render 'bookshelf', books: recently_read, title: 'Recently Read' %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
+      {% assign title = 'Currently Reading' %}
       {% render 'bookshelf', books: currently_reading, title: 'Currently Reading' %}
+    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'shuffle_want_to_read' %}
+      {% assign title = 'Shuffle Want To Read' %}
+      {% render 'bookshelf', books: shuffle_want_to_read, title: 'Shuffle Want To Read' %}
     {% else %}
+      {% assign title = 'Featured Area Not Set' %}
       <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>
     {% endif %}
   </div>
 </div>
-
-{% assign title = '' %}
-{% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
-  {% assign title = 'Goals' %}
-{% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
-  {% assign title = 'Recently Read' %}
-{% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
-  {% assign title = 'Currently Reading' %}
-{% else %}
-  {% assign title = 'Featured Area Not Set' %}
-{% endif %}
 
 {% render 'title_bar', username: username, flair: flair, title: title %}
