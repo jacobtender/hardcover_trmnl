@@ -8,8 +8,7 @@ watch:
 
 # values of custom fields (defined in src/settings.yml)
 custom_fields:
-  username: 'tender'
-  featuredArea: 'goals'
+  featuredArea: 'shuffle_want_to_read'
   bearerToken: "REMOVED_SECRET"
 
 # override variables

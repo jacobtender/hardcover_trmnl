@@ -19,8 +19,9 @@ custom_fields:
   - Goals # value will be 'goals'
   - Recently Read # value will be 'recently_read'
   - Currently Reading # value will be 'currently_reading'
+  - Shuffle Want To Reads # value will be 'shuffle_want_to_read'
   default: goals
   name: Featured Area
-  description: Select the information to display in the featured area.
+  description: Select what appears in the lower half in a full view.
 name: Hardcover Stats
 refresh_interval: 360
