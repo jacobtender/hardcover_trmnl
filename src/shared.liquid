@@ -50,7 +50,7 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    height: 200px;
+    height: 215px;
   }
 
   .book__image {
@@ -231,7 +231,7 @@
     {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <div class="bookshelf flex flex--row flex--center-x flex--bottom gap--medium">
+    <div class="bookshelf flex gap--space-between">
       {% for book in books limit:5 %}
         <div class="book">
           <div class="book__image-wrapper">
