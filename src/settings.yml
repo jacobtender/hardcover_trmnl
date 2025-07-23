@@ -8,6 +8,16 @@ polling_url: https://api.tender.wtf/hc/stats?username={{ username }}&bearer={{ b
 polling_headers: ''
 id: 63345
 custom_fields:
+- keyname: authorBio
+  name: About This Plugin
+  field_type: author_bio
+  description: |+
+    Hardcover is a social network for book lovers to find life changing books, track what you read & want to read, and connect with passionate readers.
+
+    This plugin displays your account statistics and goals, as well as the books you've recently read, are currently reading, or want to read.
+  github_url: https://github.com/jacobtender/hardcover_trmnl
+  learn_more_url: https://hardcover.app/
+  email_address: hardcover@jacobtender.net
 - keyname: bearerToken
   field_type: string
   name: Bearer Token
@@ -23,5 +33,5 @@ custom_fields:
   default: goals
   name: Featured Area
   description: Select what appears in the lower half in a full view.
-name: Hardcover Stats
+name: Hardcover
 refresh_interval: 360
