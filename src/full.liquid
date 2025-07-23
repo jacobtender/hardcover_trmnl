@@ -1,6 +1,6 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 
-<div class="layout layout--col layout--left gap--space-between">
+<div class="layout layout--col layout--left layout--top" > 
   <div id="topRow" class="grid grid--cols-2">
     {% render 'profile', image: image, name: name, username: username, bio: bio, followed_users_count: followed_users_count, followers_count: followers_count %}
 
@@ -32,5 +32,5 @@
     {% endif %}
   </div>
 </div>
-
+    
 {% render 'title_bar', username: username, flair: flair, title: title %}

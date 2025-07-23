@@ -38,21 +38,37 @@
     width: 100%;
   }
 
+  .bookshelf {
+    overflow: hidden;  
+    flex-wrap: nowrap;
+  }
+
+  .book__image-wrapper {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 200px;
+  }
+
   .book__image {
-    width: 100%;
-    height: auto;
-    max-height: 250px;
-    /* max-width: 90px; */
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
     object-fit: contain;
     border-radius: 5px;
-  }
-  .book__image.full {
-    width: 100%;
-    height: 250px
   }
 
   .rating-stars i {
     font-size: .8rem;
+  }
+
+  #bottomRow {
+    height: 100%;
+    align-items: center;
   }
 </style>
 
@@ -90,22 +106,22 @@
 {% endtemplate %}
 
 {% template title_bar %}
-<div class="title_bar">
-  <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)"
-    src="https://wp.hardcover.app/wp-content/uploads/2023/11/Symbol-Dark.png">
-  <span class="title">Hardcover - {{ title }}</span>
-  <span class="instance">@{{ username }}</span>
-  {% for i in flair %}
-  <span class="label label--small label--inverted">{{ i }}</span>
-  {% endfor %}
-</div>
+  <div class="title_bar">
+    <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)"
+      src="https://wp.hardcover.app/wp-content/uploads/2023/11/Symbol-Dark.png">
+    <span class="title">Hardcover - {{ title }}</span>
+    <span class="instance">@{{ username }}</span>
+    {% for i in flair %}
+    <span class="label label--small label--inverted">{{ i }}</span>
+    {% endfor %}
+  </div>
 {% endtemplate %}
 
 {% template goals %}
   <div class="grid grid--cols-3">
-    <span class="label col--span-2" data-pixel-perfect="true">Reading Goals</span>
+    {% comment %} <span class="label col--span-2" data-pixel-perfect="true">Reading Goals</span> {% endcomment %}
     <!-- <span class="label col--span-1 col--end" id="ratingTotalLabel">2024</span> -->
-    <div class="w--full b-h-gray-5 col--span-3"></div>
+    {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <div id="progress" class="row row--start col--span-3 w-full" style=""></div>
   </div>
   <script type="text/javascript">
@@ -210,15 +226,17 @@
 {% endtemplate %}
 
 {% template bookshelf %}
-  <div class="grid grid--cols-3">
     {% comment %} <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span> {% endcomment %}
     {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <div class="grid col--center col--span-3 gap--medium h--auto">
+    <div class="bookshelf flex flex--row flex--center-x flex--bottom gap--medium">
       {% for book in books limit:5 %}
         <div class="book">
-          <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither {% if book.rating == nil %}full{% endif %}">
+          <div class="book__image-wrapper">
+            <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither">
+          </div>
+
           {% if book.rating != nil and book.rating != '' %}
             <span class="book__rating stars flex flex--row flex--center-x">
               {% assign rating = book.rating | plus: 0 %}
@@ -246,5 +264,4 @@
         </div>
       {% endfor %}
     </div>
-  </div>
 {% endtemplate %}
