@@ -6,12 +6,13 @@ static_data: ''
 polling_verb: get
 polling_url: https://api.tender.wtf/hc/stats?username={{ username }}&bearer={{ bearerToken }}
 polling_headers: ''
+polling_body: ''
 id: 63345
 custom_fields:
 - keyname: authorBio
   name: About This Plugin
   field_type: author_bio
-  description: |+
+  description: |
     Hardcover is a social network for book lovers to find life changing books, track what you read & want to read, and connect with passionate readers.
 
     This plugin displays your account statistics and goals, as well as the books you've recently read, are currently reading, or want to read.
@@ -26,10 +27,10 @@ custom_fields:
 - keyname: featuredArea
   field_type: select
   options:
-  - Goals # value will be 'goals'
-  - Recently Read # value will be 'recently_read'
-  - Currently Reading # value will be 'currently_reading'
-  - Shuffle Want To Read # value will be 'shuffle_want_to_read'
+  - Goals
+  - Recently Read
+  - Currently Reading
+  - Shuffle Want To Read
   default: goals
   name: Featured Area
   description: Select what appears in the lower half in a full view.
