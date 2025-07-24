@@ -58,5 +58,3 @@ Or run other TRMNLP commands as needed.
 ## Contributing
 
 Feel free to open issues or pull requests!
-
-## License
