@@ -1,5 +1,9 @@
 # Hardcover TRMNL
 
+[Hardcover](https://hardcover.app) is a social network for book lovers to find life changing books, track what you read & want to read, and connect with passionate readers. 
+
+This [TRMNL](https://usetrmnl.com/) plugin displays your account statistics and goals, as well as the books you've recently read, are currently reading, or want to read.
+
 ## Getting Started
 
 ### 1. Clone the Repository
