@@ -4,7 +4,7 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: get
-polling_url: https://api.tender.wtf/hc/stats?username={{ username }}&bearer={{ bearerToken }}
+polling_url: https://api.tender.wtf/hc/stats?bearer={{ bearerToken }}
 polling_headers: ''
 polling_body: ''
 id: 63345
@@ -17,7 +17,7 @@ custom_fields:
 
     This plugin displays your account statistics and goals, as well as the books you've recently read, are currently reading, or want to read.
   github_url: https://github.com/jacobtender/hardcover_trmnl
-  learn_more_url: https://hardcover.app/
+  learn_more_url: https://hardcover.app?referrer_id=8753
   email_address: hardcover@jacobtender.net
 - keyname: bearerToken
   field_type: string
