@@ -51,12 +51,15 @@
     justify-content: center;
     flex-direction: column;
     height: 215px;
+    max-width: 145px;
+    overflow: hidden;
+    border-radius: 5px;
   }
 
   .book__image {
     display: block;
-    width: auto;
-    height: 100%;
+    width: 100%;
+    height: auto;
     max-width: 100%;
     object-fit: contain;
     border-radius: 5px;
@@ -109,7 +112,12 @@
   <div class="title_bar">
     <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)"
       src="https://wp.hardcover.app/wp-content/uploads/2023/11/Symbol-Dark.png">
-    <span class="title">Hardcover - {{ title }}</span>
+    {% if title %}
+      {% assign title_bar_title = "Hardcover - " | append: title %}
+    {% else %}
+      {% assign title_bar_title = "Hardcover" %}
+    {% endif %}
+    <span class="title">{{ title }}</span>
     <span class="instance">@{{ username }}</span>
     {% for i in flair %}
     <span class="label label--small label--inverted">{{ i }}</span>
