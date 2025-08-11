@@ -95,14 +95,14 @@
 {% template pill %}
   <div class="pill flex flex--row flex--right gap--[5px] stretch bg--gray-6">
     <span class="pill__label value value--xxsmall text-stroke stretch">{{ label }}</span>
-    <span class="pill__count value value--xxsmall value--tnums" data-value-format="true">{{ count }}</span>
+    <span class="pill__count value value--xxsmall value--tnums" data-value-format="true">{{ count | default: 0 }}</span>
   </div>
 {% endtemplate %}
 
 {% template pill_large %}
   <div class="pill flex flex--col gap--[5px] bg--gray-6">
     <div class="pill_large__count">
-      <span class="value value--small value--tnums" data-value-format="true">{{ count }}</span>
+      <span class="value value--small value--tnums" data-value-format="true">{{ count | default: 0  }}</span>
     </div>
     <span class="pill_large__label value value--xxsmall text-stroke">{{ label }}</span>
   </div>
