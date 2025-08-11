@@ -50,6 +50,11 @@ trmnlp serve
 
 Or run other TRMNLP commands as needed.
 
+```bash
+trmnlp login # authenticate
+trmnlp push  # upload
+```
+
 ## Project Structure
 
 - `src/` - Main source code
