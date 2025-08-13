@@ -40,6 +40,9 @@ query($want_to_read_limit: Int = 100) {
         title
         image: cached_image
       }
+      edition {
+        image:cached_image
+      }
       rating
       updated_at
     }
@@ -48,6 +51,9 @@ query($want_to_read_limit: Int = 100) {
         id
         title
         image: cached_image
+      }
+      edition {
+      	image: cached_image
       }
     }
   }

@@ -260,7 +260,7 @@
         <div class="book">
           {% assign book = entry.book %}
           <div class="book__image-wrapper">
-            <img src="{{ book.image.url }}" alt="{{ book.title }}" class="book__image image-dither">
+            <img src="{{ entry.edition.image.url | default: book.image.url }}" alt="{{ book.title }}" class="book__image image-dither">
           </div>
 
           {% if book.rating != nil and book.rating != '' %}
