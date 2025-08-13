@@ -123,7 +123,13 @@
     {% endif %}
     <span class="title">{{ title }}</span>
     <span class="instance">@{{ username }}</span>
-    {% for i in flair %}
+
+    {% if librarian.size > 0 %}
+      {% assign flair = flair | append: " Librarian" %}
+    {% endif %}
+    {% assign flairs = flair | strip | split: " " %}
+
+    {% for i in flairs %}
     <span class="label label--small label--inverted">{{ i }}</span>
     {% endfor %}
   </div>
@@ -244,10 +250,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <div class="bookshelf flex gap--space-between">
-      {% for book in books limit:5 %}
+      {% for entry in books %}
+        {% if filter_ids != nil %}
+          {% assign book_id = entry.book.id | append: "" %}
+          {% unless filter_ids contains book_id %}
+            {% continue %}
+          {% endunless %}
+        {% endif %}
         <div class="book">
+          {% assign book = entry.book %}
           <div class="book__image-wrapper">
-            <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither">
+            <img src="{{ book.image.url }}" alt="{{ book.title }}" class="book__image image-dither">
           </div>
 
           {% if book.rating != nil and book.rating != '' %}

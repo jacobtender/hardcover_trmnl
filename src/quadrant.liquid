@@ -1,12 +1,11 @@
-<script src="https://code.highcharts.com/highcharts.js"></script>
-
+{% assign user = data.me[0] %}
 <div class="layout layout--col layout--center gap--space-between">
 
   <div id="TopStats" class="grid grid--cols-2">
-    {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
-    {% render 'pill_large', label: "Books Read", count: status_counts.read %}
-    {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
-    {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
+    {% render 'pill_large', label: "Currently Reading", count: user.currently_reading.aggregate.count %}
+    {% render 'pill_large', label: "Books Read", count: user.read.aggregate.count %}
+    {% render 'pill_large', label: "Want To Read", count: user.want_to_read.aggregate.count %}
+    {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish.aggregate.count %}
   </div>
 </div>
-{% render 'title_bar', username: username, flair: blank %}
+{% render 'title_bar', username: user.username, flair: blank, librarian: blank %}

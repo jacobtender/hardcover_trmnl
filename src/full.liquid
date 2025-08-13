@@ -1,12 +1,13 @@
+{% assign user = data.me[0] %}
 <div class="layout layout--col layout--left layout--top" > 
   <div id="topRow" class="grid grid--cols-2">
-    {% render 'profile', image: image, name: name, username: username, bio: bio, followed_users_count: followed_users_count, followers_count: followers_count %}
+    {% render 'profile', image: user.image.url, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
 
     <div id="TopStats" class="grid grid--cols-2">
-      {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
-      {% render 'pill_large', label: "Books Read", count: status_counts.read %}
-      {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
-      {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
+      {% render 'pill_large', label: "Currently Reading", count: user.currently_reading.aggregate.count %}
+      {% render 'pill_large', label: "Books Read", count: user.read.aggregate.count %}
+      {% render 'pill_large', label: "Want To Read", count: user.want_to_read.aggregate.count %}
+      {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish.aggregate.count %}
     </div>
   </div>
 
@@ -14,16 +15,30 @@
   <div id="bottomRow" class="grid grid--cols-1">
     {% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
       {% assign title = 'Goals' %}
-      {% render 'goals', goals: goals %}
+      {% render 'goals', goals: user.goals %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
       {% assign title = 'Recently Read' %}
-      {% render 'bookshelf', books: recently_read, title: 'Recently Read' %}
+      {% render 'bookshelf', books: user.recently_read, title: 'Recently Read' %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
       {% assign title = 'Currently Reading' %}
-      {% render 'bookshelf', books: currently_reading, title: 'Currently Reading' %}
+      {% render 'bookshelf', books: user.currently_reading, title: 'Currently Reading' %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'shuffle_want_to_read' %}
       {% assign title = 'Shuffle Want To Read' %}
-      {% render 'bookshelf', books: shuffle_want_to_read, title: 'Shuffle Want To Read' %}
+      <!-- Get 5 random indexes -->
+      {% assign used = "" %}
+      {% assign total_books = user.all_want_to_read | size %}
+      {% for i in (1..20) %}
+        {% assign idx = "now" | date: "%N" | times: i | modulo: total_books %}
+
+        {% unless used contains idx %}
+          {% assign used = used | append: user.all_want_to_read[idx].book.id | append: "," %}
+          {% assign count = count | plus: 1 %}
+        {% endunless %}
+
+        {% if count == 5 %}{% break %}{% endif %}
+      {% endfor %}
+      {% assign filter_ids = used | split: "," %}
+      {% render 'bookshelf', books: user.all_want_to_read, filter_ids: filter_ids, title: 'Shuffle Want To Read' %}
     {% else %}
       {% assign title = 'Featured Area Not Set' %}
       <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>
@@ -31,4 +46,4 @@
   </div>
 </div>
     
-{% render 'title_bar', username: username, flair: flair, title: title %}
+{% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles, title: title %}
