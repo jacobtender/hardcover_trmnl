@@ -1,4 +1,4 @@
-query($want_to_read_limit: Int = 100, $reading_offset: Int = 0) {
+query($want_to_read_limit: Int = 100) {
 	me {
     name
     id
@@ -10,22 +10,22 @@ query($want_to_read_limit: Int = 100, $reading_offset: Int = 0) {
     followed_users_count
     followers_count
     image: cached_image
-    want_to_read: user_books_aggregate(where: { status_id: { _eq: 1 }}) {
+    want_to_read_count: user_books_aggregate(where: { status_id: { _eq: 1 }}) {
       aggregate {
         count
       }
     }
-    currently_reading: user_books_aggregate(where: { status_id: { _eq: 2 }}) {
+    currently_reading_count: user_books_aggregate(where: { status_id: { _eq: 2 }}) {
       aggregate {
         count
       }
     }
-    read: user_books_aggregate(where: { status_id: { _eq: 3 }}) {
+    read_count: user_books_aggregate(where: { status_id: { _eq: 3 }}) {
       aggregate {
         count
       }
     }
-    did_not_finish: user_books_aggregate(where: { status_id: { _eq: 4 }}) {
+    did_not_finish_count: user_books_aggregate(where: { status_id: { _eq: 4 }}) {
       aggregate {
         count
       }
@@ -34,6 +34,17 @@ query($want_to_read_limit: Int = 100, $reading_offset: Int = 0) {
       title: description
       read: progress
       goal
+    }
+    currently_reading: user_books(where: {status_id: {_eq: 2}}, limit: 5, order_by: { last_read_date: desc }) {
+      book {
+        title
+        image: cached_image
+      }
+      edition {
+        image:cached_image
+      }
+      rating
+      updated_at
     }
     recently_read: user_books(where: {status_id: {_eq: 3}}, limit: 5, order_by: { last_read_date: desc }) {
       book {
@@ -46,7 +57,7 @@ query($want_to_read_limit: Int = 100, $reading_offset: Int = 0) {
       rating
       updated_at
     }
-    all_want_to_read: user_books(where: { status_id: { _eq: 1 } }, offset: $reading_offset, limit: $want_to_read_limit, order_by: {date_added: desc}) {
+    want_to_read: user_books(where: { status_id: { _eq: 1 } }, limit: $want_to_read_limit, order_by: {date_added: asc}) {
       book {
         id
         title

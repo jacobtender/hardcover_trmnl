@@ -65,6 +65,10 @@
     border-radius: 5px;
   }
 
+  .profile__image {
+    border-radius: 10%;
+  }
+
   .rating-stars i {
     font-size: .8rem;
   }
@@ -78,7 +82,7 @@
 {% template profile %}
   <div id="profile" class="flex flex--col">
     <div id="userInfo" class="flex flex--row flex--center gap--medium items--center stretch">
-      <img class="image-dither h--24" style="border-radius: 10%;" src="{{ image }}">
+      {% render "image", class: "h--24 profile__image", image: image, height: 96 %}
       <div id="userMeta" class="grid grid--cols-1 gap--xsmall">
         <span id="profileName" class="value value--small">{{ name }}</span>
         <span id="bio" class="description clamp--4">{{ bio }}</span>
@@ -90,6 +94,16 @@
       {% render 'pill', label: "Followers", count: followers_count %}
     </div>
   </div>
+{% endtemplate %}
+
+{% template image %}
+  {% assign imageHeight = image.height | times: 1.0 %}
+  {% assign imageWidth = image.width | times: 1.0 %}
+  {% assign ratio = imageWidth | divided_by: imageHeight %}
+  {% assign normalisedHeight = height %}
+  {% assign normalisedWidth = height | times: ratio %}
+  {% assign url = image.url %}
+  <img class="image-dither {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=webp" {% if alt %}alt="{{ alt }}"{% endif %}>
 {% endtemplate %}
 
 {% template pill %}
@@ -260,7 +274,8 @@
         <div class="book">
           {% assign book = entry.book %}
           <div class="book__image-wrapper">
-            <img src="{{ entry.edition.image.url | default: book.image.url }}" alt="{{ book.title }}" class="book__image image-dither">
+            {% assign image = entry.edition.image | default: book.image %}
+            {% render "image", class: "book__image", image: image, height: 215, alt: book.title %}
           </div>
 
           {% if book.rating != nil and book.rating != '' %}

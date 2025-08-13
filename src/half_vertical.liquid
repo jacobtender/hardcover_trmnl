@@ -8,10 +8,10 @@
   <div class="w--full b-h-gray-5"></div>
 
   <div id="TopStats" class="grid grid--cols-2">
-    {% render 'pill_large', label: "Currently Reading", count: user.currently_reading.aggregate.count %}
-    {% render 'pill_large', label: "Books Read", count: user.read.aggregate.count %}
-    {% render 'pill_large', label: "Want To Read", count: user.want_to_read.aggregate.count %}
-    {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish.aggregate.count %}
+    {% render 'pill_large', label: "Currently Reading", count: user.currently_reading_count.aggregate.count %}
+    {% render 'pill_large', label: "Books Read", count: user.read_count.aggregate.count %}
+    {% render 'pill_large', label: "Want To Read", count: user.want_to_read_count.aggregate.count %}
+    {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish_count.aggregate.count %}
   </div>
 </div>
 {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
