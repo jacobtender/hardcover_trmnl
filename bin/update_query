@@ -28,7 +28,7 @@ QUERY_MINIMIZED=$(echo "$QUERY_CONTENT" | sed 's/[[:space:]]\+/ /g' | sed 's/^[[
 QUERY_JSON=$(echo "$QUERY_MINIMIZED" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g' | sed 's/\\/\\\\/g')
 
 # Build the complete polling_body JSON
-POLLING_BODY="{\"query\":\"$QUERY_JSON\", \"variables\": {\"reading_offset\": {{ \"now\" | date: \"%N\" | modulo: 10 }} } }"
+POLLING_BODY="{\"query\":\"$QUERY_JSON\", \"variables\": {\"reading_offset\": {{ \"now\" | date: \"%N\" | modulo: 10 }}, \"want_to_read_limit\": {% if featuredArea == \"shuffle_want_to_read\" %}100{% else %}0{% endif %} } }"
 
 # Use temp file for safety
 TEMP_FILE=$(mktemp)
