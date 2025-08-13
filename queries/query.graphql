@@ -1,4 +1,4 @@
-query($want_to_read_limit: Int = 100) {
+query($want_to_read_limit: Int = 100, $reading_offset: Int = 0) {
 	me {
     name
     id
@@ -46,7 +46,7 @@ query($want_to_read_limit: Int = 100) {
       rating
       updated_at
     }
-    all_want_to_read: user_books(where: { status_id: { _eq: 1 } }, limit: $want_to_read_limit) {
+    all_want_to_read: user_books(where: { status_id: { _eq: 1 } }, offset: $reading_offset, limit: $want_to_read_limit, order_by: {date_added: desc}) {
       book {
         id
         title
