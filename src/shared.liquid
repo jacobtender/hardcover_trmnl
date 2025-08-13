@@ -278,9 +278,10 @@
             {% render "image", class: "book__image", image: image, height: 215, alt: book.title %}
           </div>
 
-          {% if book.rating != nil and book.rating != '' %}
+          {% assign rating = entry.rating %}
+          {% if rating != nil and rating != '' %}
             <span class="book__rating stars flex flex--row flex--center-x">
-              {% assign rating = book.rating | plus: 0 %}
+              {% assign rating = rating | plus: 0 %}
               {% assign full_stars = rating | floor %}
               {% assign has_half = rating | modulo: 1 %}
               {% assign half_star = 0 %}
