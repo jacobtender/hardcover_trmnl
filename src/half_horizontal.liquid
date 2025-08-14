@@ -1,16 +1,15 @@
-<script src="https://code.highcharts.com/highcharts.js"></script>
-
+{% assign user = IDX_0.data.me[0] %}
 <div class="layout layout--col layout--left gap--space-between">
   <div id="topRow" class="grid grid--cols-2">
-    {% render 'profile', image: image, name: name, username: username, bio: bio, followed_users_count: followed_users_count, followers_count: followers_count %}
+    {% render 'profile', image: user.image.url, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
 
     <div id="TopStats" class="grid grid--cols-2">
-      {% render 'pill_large', label: "Currently Reading", count: status_counts.currently-reading %}
-      {% render 'pill_large', label: "Books Read", count: status_counts.read %}
-      {% render 'pill_large', label: "Want To Read", count: status_counts.want-to-read %}
-      {% render 'pill_large', label: "Did Not Finish", count: status_counts.did-not-finish %}
+      {% render 'pill_large', label: "Currently Reading", count: user.currently_reading_count.aggregate.count %}
+      {% render 'pill_large', label: "Books Read", count: user.read_count.aggregate.count %}
+      {% render 'pill_large', label: "Want To Read", count: user.want_to_read_count.aggregate.count %}
+      {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish_count.aggregate.count %}
     </div>
   </div>
 </div>
 
-{% render 'title_bar', username: username, flair: flair %}
+{% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles %}

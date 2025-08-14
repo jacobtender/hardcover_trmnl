@@ -41,6 +41,7 @@
   .bookshelf {
     overflow: hidden;  
     flex-wrap: nowrap;
+    justify-content: space-evenly;
   }
 
   .book__image-wrapper {
@@ -65,6 +66,10 @@
     border-radius: 5px;
   }
 
+  .profile__image {
+    border-radius: 10%;
+  }
+
   .rating-stars i {
     font-size: .8rem;
   }
@@ -78,7 +83,7 @@
 {% template profile %}
   <div id="profile" class="flex flex--col">
     <div id="userInfo" class="flex flex--row flex--center gap--medium items--center stretch">
-      <img class="image-dither h--24" style="border-radius: 10%;" src="{{ image }}">
+      {% render "image", class: "h--24 profile__image", image: image, height: 96 %}
       <div id="userMeta" class="grid grid--cols-1 gap--xsmall">
         <span id="profileName" class="value value--small">{{ name }}</span>
         <span id="bio" class="description clamp--4">{{ bio }}</span>
@@ -90,6 +95,16 @@
       {% render 'pill', label: "Followers", count: followers_count %}
     </div>
   </div>
+{% endtemplate %}
+
+{% template image %}
+  {% assign imageHeight = image.height | times: 1.0 %}
+  {% assign imageWidth = image.width | times: 1.0 %}
+  {% assign ratio = imageWidth | divided_by: imageHeight %}
+  {% assign normalisedHeight = height %}
+  {% assign normalisedWidth = height | times: ratio %}
+  {% assign url = image.url %}
+  <img class="image-dither {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=webp" {% if alt %}alt="{{ alt }}"{% endif %}>
 {% endtemplate %}
 
 {% template pill %}
@@ -123,7 +138,13 @@
     {% endif %}
     <span class="title">{{ title }}</span>
     <span class="instance">@{{ username }}</span>
-    {% for i in flair %}
+
+    {% if librarian.size > 0 %}
+      {% assign flair = flair | append: " Librarian" %}
+    {% endif %}
+    {% assign flairs = flair | strip | split: " " %}
+
+    {% for i in flairs %}
     <span class="label label--small label--inverted">{{ i }}</span>
     {% endfor %}
   </div>
@@ -239,20 +260,21 @@
 {% endtemplate %}
 
 {% template bookshelf %}
-    {% comment %} <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span> {% endcomment %}
-    {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <div class="bookshelf flex gap--space-between">
-      {% for book in books limit:5 %}
+    <div class="bookshelf flex">
+      {% for entry in books %}
         <div class="book">
+          {% assign book = entry.book %}
           <div class="book__image-wrapper">
-            <img src="{{ book.image }}" alt="{{ book.title }}" class="book__image image-dither">
+            {% assign image = entry.edition.image | default: book.image %}
+            {% render "image", class: "book__image", image: image, height: 215, alt: book.title %}
           </div>
 
-          {% if book.rating != nil and book.rating != '' %}
+          {% assign rating = entry.rating %}
+          {% if rating != nil and rating != '' %}
             <span class="book__rating stars flex flex--row flex--center-x">
-              {% assign rating = book.rating | plus: 0 %}
+              {% assign rating = rating | plus: 0 %}
               {% assign full_stars = rating | floor %}
               {% assign has_half = rating | modulo: 1 %}
               {% assign half_star = 0 %}

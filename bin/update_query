@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Find Python 3 interpreter
+if command -v python3 &>/dev/null; then
+    PYTHON=python3
+elif command -v python &>/dev/null && $python -V 2>&1 | grep -q "Python 3"; then
+    PYTHON=python
+else
+    echo "Error: Python 3 is required but not found."
+    exit 1
+fi
+
+# Update the polling_body in src/settings.yml with the graphql query from queries/query.graphql
+$PYTHON - <<'PY'
+import io, json, os
+
+SETTINGS = "src/settings.yml"
+QUERY = "queries/query.graphql"
+
+# 1) Read and lightly minify the query: trim each line, drop empty lines, keep line breaks
+with io.open(QUERY, "r", encoding="utf-8") as f:
+    lines = [ln.strip() for ln in f.read().splitlines()]
+    lines = [ln for ln in lines if ln]
+q_min = "\n".join(lines)
+
+# 2) JSON with literal \n (json.dumps handles this). Remove spaces after ':'/',' for compactness.
+body = json.dumps({"query": q_min}, ensure_ascii=False, separators=(',',':'))
+
+# 3) Prepare for YAML single-quoted scalar
+body_yaml = body.replace("'", "''")
+
+# 4) Line-wise replace (no regex): avoid interpreting \n as real newlines
+replaced = False
+with io.open(SETTINGS, "r", encoding="utf-8") as f:
+    lines = f.read().splitlines()
+
+out = []
+for ln in lines:
+    if ln.lstrip().startswith("polling_body:"):
+        out.append(f"polling_body: '{body_yaml}'")
+        replaced = True
+    else:
+        out.append(ln)
+
+if not replaced:
+    out.append(f"polling_body: '{body_yaml}'")
+
+with io.open(SETTINGS, "w", encoding="utf-8") as f:
+    f.write("\n".join(out) + "\n")
+
+print("Updated", SETTINGS)
+PY

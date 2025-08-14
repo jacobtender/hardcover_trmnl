@@ -1,0 +1,71 @@
+query($want_to_read_limit: Int = 100) {
+  me {
+    name
+    id
+    username
+    bio
+    books_count
+    flair
+    librarian_roles
+    followed_users_count
+    followers_count
+    image: cached_image
+    want_to_read_count: user_books_aggregate(where: { status_id: { _eq: 1 }}) {
+      aggregate {
+        count
+      }
+    }
+    currently_reading_count: user_books_aggregate(where: { status_id: { _eq: 2 }}) {
+      aggregate {
+        count
+      }
+    }
+    read_count: user_books_aggregate(where: { status_id: { _eq: 3 }}) {
+      aggregate {
+        count
+      }
+    }
+    did_not_finish_count: user_books_aggregate(where: { status_id: { _eq: 5 }}) {
+      aggregate {
+        count
+      }
+    }
+    goals {
+      title: description
+      read: progress
+      goal
+    }
+    currently_reading: user_books(where: {status_id: {_eq: 2}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
+      book {
+        title
+        image: cached_image
+      }
+      edition {
+        image: cached_image
+      }
+      rating
+      updated_at
+    }
+    recently_read: user_books(where: {status_id: {_eq: 3}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
+      book {
+        title
+        image: cached_image
+      }
+      edition {
+        image: cached_image
+      }
+      rating
+      updated_at
+    }
+    want_to_read: user_books(where: { status_id: { _eq: 1 } }, limit: $want_to_read_limit, order_by: {date_added: asc}) {
+      book {
+        id
+        title
+        image: cached_image
+      }
+      edition {
+        image: cached_image
+      }
+    }
+  }
+}
