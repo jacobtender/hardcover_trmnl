@@ -40,12 +40,32 @@
         {% assign bid = entry.book.id | append: "" %}
         {% assign needle = "," | append: bid | append: "," %}
 
-        {% unless used_ids_csv contains needle %}
-          {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
-          {% assign picks_idx_csv = picks_idx_csv | append: idx | append: "," %}
-          {% assign count = count | plus: 1 %}
-        {% endunless %}
+        {% assign book_img = entry.book.image | default: "" %}
+        {% assign edition_img = entry.edition.image | default: "" %}
+        {% assign empty_edition_img = false %}
+        {% assign empty_book_img = false %}
 
+        <!-- If the book image or Edition image are empty, skip them. -->
+        {% if edition_img == "" or edition_img == "{}" %}
+          {% assign empty_edition_img = true %}
+          {% comment %} {{ entry.book.title }} has no edition image! {% endcomment %}
+        {% endif %}
+
+        {% if book_img == "" or book_img == "{}" %}
+          {% assign empty_book_img = true %}
+          {% comment %} {{ entry.book.title }} has no book image! {% endcomment %}
+        {% endif %}
+
+        {% if empty_edition_img and empty_book_img %}
+          {% comment %} {{ entry.book.title }} has no usable image! {% endcomment %}
+            {% continue %}
+        {% else %}
+          {% unless used_ids_csv contains needle %}
+            {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
+            {% assign picks_idx_csv = picks_idx_csv | append: idx | append: "," %}
+            {% assign count = count | plus: 1 %}
+          {% endunless %}
+        {% endif %}
         {% if count == limit %}{% break %}{% endif %}
       {% endfor %}
 
