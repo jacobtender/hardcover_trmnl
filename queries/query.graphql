@@ -1,5 +1,5 @@
 query($want_to_read_limit: Int = 100) {
-	me {
+  me {
     name
     id
     username
@@ -64,7 +64,7 @@ query($want_to_read_limit: Int = 100) {
         image: cached_image
       }
       edition {
-      	image: cached_image
+        image: cached_image
       }
     }
   }
