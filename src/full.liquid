@@ -24,21 +24,42 @@
       {% render 'bookshelf', books: user.currently_reading, title: 'Currently Reading' %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'shuffle_want_to_read' %}
       {% assign title = 'Shuffle Want To Read' %}
-      <!-- Get 5 random indexes -->
-      {% assign used = "" %}
-      {% assign total_books = user.want_to_read | size %}
-      {% for i in (1..20) %}
-        {% assign idx = "now" | date: "%N" | times: i | modulo: total_books %}
 
-        {% unless used contains idx %}
-          {% assign used = used | append: user.want_to_read[idx].book.id | append: "," %}
+      {% assign total = user.want_to_read | size %}
+      {% assign limit = total | at_most: 5 %}
+      {% assign count = 0 %}
+      {% assign picks = "" | split: "" %}
+      {% assign used_ids_csv = "," %}
+      {% assign picks_idx_csv = "" %}
+      {% assign count = 0 %}
+
+      {% for i in (1..total) %}
+        {% assign seed = "now" | date: "%N" | plus: i %}
+        {% assign idx = seed | modulo: total %}
+        {% assign entry = user.want_to_read[idx] %}
+        {% assign bid = entry.book.id | append: "" %}
+        {% assign needle = "," | append: bid | append: "," %}
+
+        {% unless used_ids_csv contains needle %}
+          {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
+          {% assign picks_idx_csv = picks_idx_csv | append: idx | append: "," %}
           {% assign count = count | plus: 1 %}
         {% endunless %}
 
-        {% if count == 5 %}{% break %}{% endif %}
+        {% if count == limit %}{% break %}{% endif %}
       {% endfor %}
-      {% assign filter_ids = used | split: "," %}
-      {% render 'bookshelf', books: user.want_to_read, filter_ids: filter_ids, title: 'Shuffle Want To Read' %}
+
+
+      {% assign picks_idx = picks_idx_csv | split: "," %}
+      {% for j in picks_idx %}
+        {% if j != "" %}
+          {% assign jn = j | plus: 0 %} <!-- Make sure the index is actually a number, not a string. This was hard to figure out. -->
+          {% assign pick = user.want_to_read | slice: jn, 1 %}
+          {% assign picks = picks | concat: pick %}
+        {% endif %}
+      {% endfor %}
+
+      {% render 'bookshelf', books: picks, title: 'Shuffle Want To Read' %}
     {% else %}
       {% assign title = 'Featured Area Not Set' %}
       <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>

@@ -264,12 +264,6 @@
 
     <div class="bookshelf flex">
       {% for entry in books %}
-        {% if filter_ids != nil %}
-          {% assign book_id = entry.book.id | append: "" %}
-          {% unless filter_ids contains book_id %}
-            {% continue %}
-          {% endunless %}
-        {% endif %}
         <div class="book">
           {% assign book = entry.book %}
           <div class="book__image-wrapper">
