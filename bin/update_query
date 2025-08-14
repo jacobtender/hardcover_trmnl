@@ -11,7 +11,7 @@ else
 fi
 
 # Update the polling_body in src/settings.yml with the graphql query from queries/query.graphql
-python3 - <<'PY'
+$PYTHON - <<'PY'
 import io, json, os
 
 SETTINGS = "src/settings.yml"
