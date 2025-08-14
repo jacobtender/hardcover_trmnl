@@ -41,6 +41,7 @@
   .bookshelf {
     overflow: hidden;  
     flex-wrap: nowrap;
+    justify-content: space-evenly;
   }
 
   .book__image-wrapper {
@@ -259,11 +260,9 @@
 {% endtemplate %}
 
 {% template bookshelf %}
-    {% comment %} <span class="label col--span-2" data-pixel-perfect="true">{{ title }}</span> {% endcomment %}
-    {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <div class="bookshelf flex gap--space-between">
+    <div class="bookshelf flex">
       {% for entry in books %}
         {% if filter_ids != nil %}
           {% assign book_id = entry.book.id | append: "" %}
