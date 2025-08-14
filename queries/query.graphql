@@ -35,24 +35,24 @@ query($want_to_read_limit: Int = 100) {
       read: progress
       goal
     }
-    currently_reading: user_books(where: {status_id: {_eq: 2}}, limit: 5, order_by: { last_read_date: desc }) {
+    currently_reading: user_books(where: {status_id: {_eq: 2}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
       book {
         title
         image: cached_image
       }
       edition {
-        image:cached_image
+        image: cached_image
       }
       rating
       updated_at
     }
-    recently_read: user_books(where: {status_id: {_eq: 3}}, limit: 5, order_by: { last_read_date: desc }) {
+    recently_read: user_books(where: {status_id: {_eq: 3}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
       book {
         title
         image: cached_image
       }
       edition {
-        image:cached_image
+        image: cached_image
       }
       rating
       updated_at
