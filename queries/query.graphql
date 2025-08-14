@@ -25,7 +25,7 @@ query($want_to_read_limit: Int = 100) {
         count
       }
     }
-    did_not_finish_count: user_books_aggregate(where: { status_id: { _eq: 4 }}) {
+    did_not_finish_count: user_books_aggregate(where: { status_id: { _eq: 5 }}) {
       aggregate {
         count
       }
