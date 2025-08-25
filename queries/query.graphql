@@ -30,10 +30,15 @@ query ($want_to_read_limit: Int = 100) {
         count
       }
     }
-    goals {
+    goals(where: {archived: {_eq: false}}) {
       title: description
       read: progress
       goal
+      start_date
+      end_date
+      completed_at
+      state
+      metric
     }
     currently_reading: user_books(
       where: {status_id: {_eq: 2}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}
