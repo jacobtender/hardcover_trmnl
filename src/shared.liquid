@@ -198,115 +198,6 @@
   </div>
 {% endtemplate %}
 
-{% template goals %}
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <div class="grid grid--cols-3">
-    {% comment %} <span class="label col--span-2" data-pixel-perfect="true">Reading Goals</span> {% endcomment %}
-    <!-- <span class="label col--span-1 col--end" id="ratingTotalLabel">2024</span> -->
-    {% comment %} <div class="w--full b-h-gray-5 col--span-3"></div> {% endcomment %}
-    <div id="progress" class="row row--start col--span-3 w-full" style=""></div>
-  </div>
-  <script type="text/javascript">
-    var testData = {{ goals | json }}
-
-    // Sort the testData array by the ratio of read to goal in descending order
-    testData.sort((a, b) => (b.read / b.goal) - (a.read / a.goal));
-    testData = testData.slice(0, 6); // Limit to top 6 items
-
-    // Extract categories and data for Highcharts
-    // categories are the titles of the goals
-    const categories = testData.map(goal => goal.title);
-    const data = testData.map(goal => ({
-      // y: Math.min(Math.round((goal.read / goal.goal) * 100), 100),
-      y: Math.min((goal.read / goal.goal) * 100),
-      label: `${goal.read}/${goal.goal} books`
-    }));
-
-
-    // Initialize chart with bar/column configuration for 4 series
-    Highcharts.chart('progress', {
-      chart: {
-        animation: false,
-        type: 'bar',
-        height: 200,
-        spacing: [0, 0, 0, 0], // top, right, bottom, left
-        renderTo: 'container',
-      },
-      title: {
-        text: null
-      },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        enabled: false // Disable hover tooltips
-      },
-      xAxis: {
-        categories: categories,
-        title: { text: null },
-        labels: {
-          style: {
-            fontSize: '16px',
-            fontWeight: 'bold',
-            padding: 0
-          }
-        },
-        lineWidth: 0
-      },
-      yAxis: {
-        min: 0,
-        max: 100,
-        title: { text: 'Progress' },
-        labels: { 
-          format: '{value}%',
-        },
-        visible: false,
-      },
-      plotOptions: {
-        series: {
-          pointWidth: 30,
-          animation: false,
-          enableMouseTracking: false,
-          states: {
-            inactive: {
-              opacity: 1 // Prevent dimming of other series on hover
-            },
-            hover: {
-              enabled: false // Disable hover state styling
-            }
-          },
-          stacking: 'normal',
-          dataLabels: {
-            enabled: true,
-            useHTML: true,
-            style: {
-              fontSize: '16px',
-            },
-            formatter: function () {
-              if (this.point.y === 0) {
-                return `<span style="padding-left: 5px;">Not Yet Started</span>`;
-              }
-              const rounded = Math.round(this.y);
-              return `<span class="text" data-pixel-perfect="true">${this.point.label} (${rounded}%)</span>`;
-            }
-          }
-        }
-      },
-      series: [{
-        name: 'Progress',
-        color: '#000',
-        data: data
-      }],
-      credits: {
-        enabled: false
-      },
-      exporting: {
-        enabled: false
-      },
-    });
-  </script>
-{% endtemplate %}
-
 {% template bookshelf %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -368,5 +259,47 @@
       <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%"></div>
     </div>
     <span class="progress-bar__text" data-pixel-perfect="true">{{ percent | round }}%</span>
+  </div>
+{% endtemplate %}
+
+{% template goals %}
+  {% for goal in goals %}
+    {% render "goal_bar", title: goal.title, goal: goal.goal, read: goal.read %}
+  {% endfor %}
+{% endtemplate %}
+
+{% template goal_bar %}
+  <style>
+    .progress-wrapper {
+      background-color: #f3f3f3;
+      width: 100%;
+      height: 25px;
+    }
+    .progress-wrapper::after {
+      content: attr(value);
+      color: black;
+      font-weight: 700;
+      float: left;
+      margin-top: -50px;
+    }
+    .progress-meter {
+      background-color: black;
+      width: min(calc(var(--raised) / var(--goal) * 100%), 100%);
+      min-width: 40px;
+      height: 100%;
+    }
+    .progress-meter::before {
+      content: attr(value);
+      color: white;
+      font-weight: 700;
+      float: right;
+      padding-right: 5px;
+      line-height: 25px;
+    }
+  </style>
+  <div class="progress-wrapper bg--gray-6" value="{{ title }}">
+    <div class="progress-meter" value="{{ read | round }}" 
+        style="--goal: {{ goal | default: 0  }}; --raised:  {{ read }};">
+    </div>
   </div>
 {% endtemplate %}
