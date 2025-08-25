@@ -14,7 +14,7 @@
   {% assign title = '' %}
   <div id="bottomRow" class="grid grid--cols-1">
     {% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
-      {% assign title = 'Goals' %}
+      {% assign title = 'Reading Goals' %}
       {% render 'goals', goals: user.goals %}
     {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
       {% assign title = 'Recently Read' %}
