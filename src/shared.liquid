@@ -126,6 +126,61 @@
     color: #000;
   }
 
+  .progress-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 50px; /* label | bar | percent */
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .progress-label {
+    text-align: right;  /* keeps edges aligned neatly */
+    padding-right: 8px;
+  }
+
+  .progress-track {
+    position: relative;
+    background: #f3f3f3;
+    height: 25px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: black;
+    transition: width 0.3s ease;
+  }
+
+  .progress-value {
+    font-weight: 700;
+    text-align: left;
+    min-width: 40px;
+  }
+
+  .progress-inside {
+    position: absolute;
+    top: 2px; 
+    bottom: 0;
+    left: 0;
+    right: 0;              /* stretch across */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* center horizontally */
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1;       
+    color: black; 
+    z-index: 1;
+  }
+
+  .progress-fill + .progress-inside {
+    color: white;          /* when text overlaps the black bar */
+  }
 </style>
 
 {% template profile %}
@@ -264,56 +319,23 @@
 
 {% template goals %}
   {% for goal in goals limit:6%}
-    {% render "goal_bar", title: goal.title, goal: goal.goal, read: goal.read %}
+    {% render "goal_bar", goal:goal %}
   {% endfor %}
 {% endtemplate %}
 
 {% template goal_bar %}
-  <style>
-    .progress-row {
-      display: grid;
-      grid-template-columns: 200px 1fr 50px; /* label | bar | percent */
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      margin: 6px 0;
-    }
+  {% assign read_num = goal.read | plus: 0 %}
+  {% assign goal_num = goal.goal | plus: 0 %}
 
-    .progress-label {
-      text-align: right;  /* keeps edges aligned neatly */
-      padding-right: 8px;
-    }
-
-    .progress-track {
-      background: #f3f3f3;
-      height: 20px;
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: black;
-      transition: width 0.3s ease;
-    }
-
-    .progress-value {
-      font-weight: 700;
-      text-align: left;
-      min-width: 40px;
-    }
-  </style>
-
-  {% assign read_num = read | plus: 0 %}
-  {% assign goal_num = goal | plus: 0 %}
-
-  <div class="progress-row">
-    <span class="progress-label value--xxsmall clamp--1">{{ title }}</span>
+  <div class="progress-row value--xxsmall">
+    <span class="progress-label clamp--1">{{ goal.title }}</span>
     <div class="progress-track bg--gray-4">
-      <div class="progress-fill" style="width: {{ read_num | times: 100 | divided_by: goal_num | round }}%;"></div>
+      {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
+      <div class="progress-fill" style="width: {{ percent }}%;"></div>
+      <span class="progress-inside text-stroke text-stroke--medium text-stroke--black">
+        {{ goal.read | round }} / {{ goal.goal }} {{ goal.metric }}s
+      </span>
     </div>
-    <span class="progress-value value value--xxsmall value--tnums">{{ read | round }}%</span>
+    <span class="progress-value value--tnums">{{ percent }}%</span>
   </div>
-
 {% endtemplate %}
