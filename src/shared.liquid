@@ -263,43 +263,57 @@
 {% endtemplate %}
 
 {% template goals %}
-  {% for goal in goals %}
+  {% for goal in goals limit:6%}
     {% render "goal_bar", title: goal.title, goal: goal.goal, read: goal.read %}
   {% endfor %}
 {% endtemplate %}
 
 {% template goal_bar %}
   <style>
-    .progress-wrapper {
-      background-color: #f3f3f3;
+    .progress-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 50px; /* label | bar | percent */
+      align-items: center;
+      gap: 8px;
       width: 100%;
-      height: 25px;
+      margin: 6px 0;
     }
-    .progress-wrapper::after {
-      content: attr(value);
-      color: black;
-      font-weight: 700;
-      float: left;
-      margin-top: -50px;
+
+    .progress-label {
+      text-align: right;  /* keeps edges aligned neatly */
+      padding-right: 8px;
     }
-    .progress-meter {
-      background-color: black;
-      width: min(calc(var(--raised) / var(--goal) * 100%), 100%);
-      min-width: 40px;
+
+    .progress-track {
+      background: #f3f3f3;
+      height: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
       height: 100%;
+      background: black;
+      transition: width 0.3s ease;
     }
-    .progress-meter::before {
-      content: attr(value);
-      color: white;
+
+    .progress-value {
       font-weight: 700;
-      float: right;
-      padding-right: 5px;
-      line-height: 25px;
+      text-align: left;
+      min-width: 40px;
     }
   </style>
-  <div class="progress-wrapper bg--gray-6" value="{{ title }}">
-    <div class="progress-meter" value="{{ read | round }}" 
-        style="--goal: {{ goal | default: 0  }}; --raised:  {{ read }};">
+
+  {% assign read_num = read | plus: 0 %}
+  {% assign goal_num = goal | plus: 0 %}
+
+  <div class="progress-row">
+    <span class="progress-label value--xxsmall clamp--1">{{ title }}</span>
+    <div class="progress-track bg--gray-4">
+      <div class="progress-fill" style="width: {{ read_num | times: 100 | divided_by: goal_num | round }}%;"></div>
     </div>
+    <span class="progress-value value value--xxsmall value--tnums">{{ read | round }}%</span>
   </div>
+
 {% endtemplate %}
