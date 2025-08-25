@@ -42,6 +42,12 @@ query($want_to_read_limit: Int = 100) {
       }
       edition {
         image: cached_image
+        reading_format {
+          format
+        }
+      }
+      user_book_reads {
+        progress
       }
       rating
       updated_at
