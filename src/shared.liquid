@@ -47,6 +47,7 @@
   .book__image-wrapper {
     flex: 1 1 auto;
     min-width: 0;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,6 +79,53 @@
     height: 100%;
     align-items: center;
   }
+
+  .progress-bar {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    width: calc(100% + 1px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 0 2px 1px;
+    background: white;
+    /* border-radius: 5px 5px 0 0 ; */
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .progress-bar__icon {
+    color: black;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+    margin-right: 4px;
+  }
+
+  .progress-bar__track {
+    flex: 1;
+    height: 8px;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar__fill {
+    height: 100%;
+    background: black;
+    transition: width 0.3s ease;
+  }
+
+  .progress-bar__text {
+    font-family: "Inter Variable", Inter;
+    font-size: 0.85rem;
+    font-weight: bold;
+
+    margin-left: 4px;
+    flex: 0 0 auto;
+    color: #000;
+  }
+
 </style>
 
 {% template profile %}
@@ -269,6 +317,12 @@
           <div class="book__image-wrapper">
             {% assign image = entry.edition.image | default: book.image %}
             {% render "image", class: "book__image", image: image, height: 215, alt: book.title %}
+
+            {% if entry.user_book_reads[0].progress %}
+              {% assign percent = entry.user_book_reads[0].progress | round %}
+              {% assign format = entry.edition.reading_format.format %}
+              {% render "progress_bar", percent: percent, format: format %}
+            {% endif %}
           </div>
 
           {% assign rating = entry.rating %}
@@ -299,4 +353,20 @@
         </div>
       {% endfor %}
     </div>
+{% endtemplate %}
+
+{% template progress_bar %}
+  <div class="progress-bar">
+    <span class="progress-bar__icon" data-pixel-perfect="true">
+      {% if format == "Listened" %}
+        <i class="fa-solid fa-headphones"></i>
+      {% else %}
+        <i class="fa-solid fa-book"></i>
+      {% endif %}
+    </span>
+    <div class="progress-bar__track bg--gray-4">
+      <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%"></div>
+    </div>
+    <span class="progress-bar__text" data-pixel-perfect="true">{{ percent | round }}%</span>
+  </div>
 {% endtemplate %}
