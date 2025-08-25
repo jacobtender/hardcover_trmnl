@@ -82,29 +82,48 @@
 
   .progress-bar {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
+    bottom: -1px;
+    left: -1px;
+    width: calc(100% + 1px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 5px 5px 0 0 ;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .progress-bar__icon {
+    color: black;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+  }
+
+  .progress-bar__track {
+    flex: 1;
+    height: 6px;
     background: rgba(0,0,0,0.15);
-    border-radius: 5px;
+    border-radius: 3px;
     overflow: hidden;
+    position: relative;
   }
 
   .progress-bar__fill {
     height: 100%;
     background: black;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 4px;
+    transition: width 0.3s ease;
   }
 
   .progress-bar__text {
     font-family: "Inter Variable", Inter;
     font-size: 0.85rem;
     font-weight: bold;
-    color: white;
+
+    margin-left: 4px;
+    flex: 0 0 auto;
+    color: #000;
   }
 
 </style>
@@ -301,7 +320,8 @@
 
             {% if entry.user_book_reads[0].progress %}
               {% assign percent = entry.user_book_reads[0].progress | round %}
-              {% render "progress_bar", percent: percent %}
+              {% assign format = entry.edition.reading_format.format %}
+              {% render "progress_bar", percent: percent, format: format %}
             {% endif %}
           </div>
 
@@ -337,8 +357,16 @@
 
 {% template progress_bar %}
   <div class="progress-bar">
-    <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%">
-      <span class="progress-bar__text">{{ percent | round }}%</span>
+    <span class="progress-bar__icon">
+      {% if format == "Listened" %}
+        <i class="fa-solid fa-headphones"></i>
+      {% else %}
+        <i class="fa-solid fa-book"></i>
+      {% endif %}
+    </span>
+    <div class="progress-bar__track">
+      <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%"></div>
     </div>
+    <span class="progress-bar__text">{{ percent | round }}%</span>
   </div>
 {% endtemplate %}
