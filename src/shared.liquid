@@ -88,9 +88,9 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    padding: 2px 4px;
-    background: rgba(255,255,255,0.9);
-    border-radius: 5px 5px 0 0 ;
+    padding: 2px 0 2px 1px;
+    background: white;
+    /* border-radius: 5px 5px 0 0 ; */
     font-size: 0.7rem;
     font-weight: 600;
   }
@@ -99,12 +99,12 @@
     color: black;
     font-size: 0.85rem;
     flex: 0 0 auto;
+    margin-right: 4px;
   }
 
   .progress-bar__track {
     flex: 1;
-    height: 6px;
-    background: rgba(0,0,0,0.15);
+    height: 8px;
     border-radius: 3px;
     overflow: hidden;
     position: relative;
@@ -357,16 +357,16 @@
 
 {% template progress_bar %}
   <div class="progress-bar">
-    <span class="progress-bar__icon">
+    <span class="progress-bar__icon" data-pixel-perfect="true">
       {% if format == "Listened" %}
         <i class="fa-solid fa-headphones"></i>
       {% else %}
         <i class="fa-solid fa-book"></i>
       {% endif %}
     </span>
-    <div class="progress-bar__track">
+    <div class="progress-bar__track bg--gray-4">
       <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%"></div>
     </div>
-    <span class="progress-bar__text">{{ percent | round }}%</span>
+    <span class="progress-bar__text" data-pixel-perfect="true">{{ percent | round }}%</span>
   </div>
 {% endtemplate %}
