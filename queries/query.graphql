@@ -1,4 +1,4 @@
-query($want_to_read_limit: Int = 100) {
+query ($want_to_read_limit: Int = 100) {
   me {
     name
     id
@@ -10,22 +10,22 @@ query($want_to_read_limit: Int = 100) {
     followed_users_count
     followers_count
     image: cached_image
-    want_to_read_count: user_books_aggregate(where: { status_id: { _eq: 1 }}) {
+    want_to_read_count: user_books_aggregate(where: {status_id: {_eq: 1}}) {
       aggregate {
         count
       }
     }
-    currently_reading_count: user_books_aggregate(where: { status_id: { _eq: 2 }}) {
+    currently_reading_count: user_books_aggregate(where: {status_id: {_eq: 2}}) {
       aggregate {
         count
       }
     }
-    read_count: user_books_aggregate(where: { status_id: { _eq: 3 }}) {
+    read_count: user_books_aggregate(where: {status_id: {_eq: 3}}) {
       aggregate {
         count
       }
     }
-    did_not_finish_count: user_books_aggregate(where: { status_id: { _eq: 5 }}) {
+    did_not_finish_count: user_books_aggregate(where: {status_id: {_eq: 5}}) {
       aggregate {
         count
       }
@@ -35,7 +35,11 @@ query($want_to_read_limit: Int = 100) {
       read: progress
       goal
     }
-    currently_reading: user_books(where: {status_id: {_eq: 2}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
+    currently_reading: user_books(
+      where: {status_id: {_eq: 2}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}
+      limit: 5
+      order_by: {last_read_date: desc_nulls_last}
+    ) {
       book {
         title
         image: cached_image
@@ -52,7 +56,11 @@ query($want_to_read_limit: Int = 100) {
       rating
       updated_at
     }
-    recently_read: user_books(where: {status_id: {_eq: 3}}, limit: 5, order_by: { last_read_date: desc_nulls_last }) {
+    recently_read: user_books(
+      where: {status_id: {_eq: 3}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}
+      limit: 5
+      order_by: {last_read_date: desc_nulls_last}
+    ) {
       book {
         title
         image: cached_image
@@ -63,7 +71,11 @@ query($want_to_read_limit: Int = 100) {
       rating
       updated_at
     }
-    want_to_read: user_books(where: { status_id: { _eq: 1 } }, limit: $want_to_read_limit, order_by: {date_added: asc}) {
+    want_to_read: user_books(
+      where: {status_id: {_eq: 1}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}
+      limit: $want_to_read_limit
+      order_by: {date_added: asc}
+    ) {
       book {
         id
         title
