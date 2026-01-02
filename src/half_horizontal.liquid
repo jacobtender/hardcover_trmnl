@@ -1,7 +1,7 @@
 {% assign user = IDX_0.data.me[0] %}
 <div class="layout layout--col layout--left gap--space-between">
   <div id="topRow" class="grid grid--cols-2">
-    {% render 'profile', image: user.image.url, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+    {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
 
     <div id="TopStats" class="grid grid--cols-2">
       {% render 'pill_large', label: "Currently Reading", count: user.currently_reading_count.aggregate.count %}
