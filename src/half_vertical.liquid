@@ -1,6 +1,5 @@
 {% assign user = IDX_0.data.me[0] %}
 <div class="layout layout--col layout--center gap--space-between">
-<<<<<<< HEAD
   <div id="topRow" class="grid w--full">
     {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
   </div>
@@ -9,20 +8,4 @@
 
   {% render 'stat_grid', user: user %}
 </div>
-=======
-  <div id="topRow" class="grid">
-    {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count:
-    user.followed_users_count, followers_count: user.followers_count %}
-  </div>
-
-  <div class="w--full b-h-gray-5"></div>
-
-  <div id="TopStats" class="grid grid--cols-2">
-    {% render 'pill_large', label: "Currently Reading", count: user.currently_reading_count.aggregate.count %}
-    {% render 'pill_large', label: "Books Read", count: user.read_count.aggregate.count %}
-    {% render 'pill_large', label: "Want To Read", count: user.want_to_read_count.aggregate.count %}
-    {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish_count.aggregate.count %}
-  </div>
-</div>
->>>>>>> d1bc02abc488d4abc946fd780ea910be4ed8b2e8
 {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
