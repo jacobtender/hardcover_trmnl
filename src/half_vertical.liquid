@@ -1,13 +1,13 @@
 {% assign user = IDX_0.data.me[0] %}
+{% assign quadrant_content_raw = trmnl.plugin_settings.custom_fields_values.quadrantContent | default: 'stats' %}
+{% assign quadrant_content = quadrant_content_raw | downcase | replace: ' ', '_' %}
 {% if user %}
   <div class="layout layout--col layout--center gap--space-between">
-    <div id="topRow" class="grid w--full">
+    <div id="halfVerticalProfile" class="grid w--full p--small">
       {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
     </div>
 
-    <div class="divider"></div>
-
-    {% render 'stat_grid', user: user %}
+    {% render 'quadrant_content', user: user, content: quadrant_content %}
   </div>
   {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
 {% else %}

@@ -46,5 +46,16 @@ custom_fields:
   default: profile_information
   name: Half Horizontal Content
   description: Select what appears in a half horizontal view.
+- keyname: quadrantContent
+  field_type: select
+  options:
+  - Stats
+  - Goals
+  - Currently Reading
+  - Recently Read
+  - Shuffle Want To Read
+  default: stats
+  name: Quadrant Content
+  description: Select what appears in quadrant views and the lower half of half vertical views.
 name: Hardcover
 refresh_interval: 360

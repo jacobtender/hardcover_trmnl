@@ -77,6 +77,37 @@
     height: 100%;
   }
 
+  .bookshelf--quadrant {
+    align-items: center;
+    height: 100%;
+    justify-content: space-evenly;
+  }
+
+  .bookshelf--quadrant .book {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bookshelf--quadrant .book__image-wrapper {
+    height: 170px;
+    max-width: 115px;
+  }
+
+  .quadrant-content {
+    height: 100%;
+    width: 100%;
+  }
+
+  .quadrant-content .progress-row {
+    grid-template-columns: 1fr 46px;
+    gap: 6px;
+  }
+
+  .quadrant-content .progress-label {
+    display: none;
+  }
+
   .book__image {
     display: block;
     width: 100%;
@@ -92,6 +123,10 @@
   #bottomRow {
     height: 100%;
     align-items: center;
+  }
+
+  #halfVerticalProfile {
+    padding-top: 12px;
   }
 
   .book-progress {
@@ -336,6 +371,36 @@
   {% endif %}
 {% endtemplate %}
 
+{% template quadrant_content %}
+  {% assign content = content | default: 'stats' %}
+  <div class="quadrant-content flex flex--col flex--center">
+    {% if content == 'stats' %}
+      {% render 'stat_grid', user: user %}
+    {% elsif content == 'goals' %}
+      {% render 'goals', goals: user.goals, goal_limit: 2 %}
+    {% elsif content == 'currently_reading' %}
+      {% render 'bookshelf', books: user.currently_reading, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+    {% elsif content == 'recently_read' %}
+      {% render 'bookshelf', books: user.recently_read, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+    {% elsif content == 'shuffle_want_to_read' %}
+      {% assign total = user.want_to_read | size %}
+      {% if total > 0 %}
+        {% assign seed = "now" | date: "%N" %}
+        {% assign idx = seed | modulo: total %}
+        {% assign picks = user.want_to_read | slice: idx, 3 %}
+        {% if picks.size < 3 and total > picks.size %}
+          {% assign remaining = 3 | minus: picks.size %}
+          {% assign extra = user.want_to_read | slice: 0, remaining %}
+          {% assign picks = picks | concat: extra %}
+        {% endif %}
+        {% render 'bookshelf', books: picks, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+      {% endif %}
+    {% else %}
+      {% render 'stat_grid', user: user %}
+    {% endif %}
+  </div>
+{% endtemplate %}
+
 {% template title_bar %}
   <div class="title_bar">
     {% comment %} <img id="logo" class="image image-stroke" style="transform: rotate(-12deg)"
@@ -367,7 +432,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <div class="bookshelf {{ shelf_class }} flex">
-      {% for entry in books %}
+      {% assign rendered_book_limit = book_limit | default: 5 %}
+      {% assign rendered_show_rating = true %}
+      {% if show_rating == false or show_rating == 'false' %}
+        {% assign rendered_show_rating = false %}
+      {% endif %}
+      {% for entry in books limit:rendered_book_limit %}
         <div class="book">
           {% assign book = entry.book %}
           <div class="book__image-wrapper rounded--xsmall">
@@ -383,7 +453,7 @@
           </div>
 
           {% assign rating = entry.rating %}
-          {% if rating != nil and rating != '' %}
+          {% if rendered_show_rating and rating != nil and rating != '' %}
             <span class="book__rating stars flex flex--row flex--center-x">
               {% assign rating = rating | plus: 0 %}
               {% assign full_stars = rating | floor %}
