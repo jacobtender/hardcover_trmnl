@@ -50,7 +50,6 @@ custom_fields:
   field_type: select
   options:
   - Stats
-  - Goals
   - Currently Reading
   - Recently Read
   - Shuffle Want To Read

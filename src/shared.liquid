@@ -389,8 +389,6 @@
   <div class="quadrant-content flex flex--col flex--center">
     {% if content == 'stats' %}
       {% render 'stat_grid', user: user %}
-    {% elsif content == 'goals' %}
-      {% render 'goals', goals: user.goals, goal_limit: 2 %}
     {% elsif content == 'currently_reading' %}
       {% render 'bookshelf', books: user.currently_reading, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No current books' %}
     {% elsif content == 'recently_read' %}
