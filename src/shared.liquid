@@ -258,7 +258,7 @@
 
 {% template featured_area %}
   {% if area == 'goals' %}
-    {% render 'goals', goals: user.goals %}
+    {% render 'goals', goals: user.goals, goal_limit: goal_limit %}
   {% elsif area == 'recently_read' %}
     {% render 'bookshelf', books: user.recently_read, title: 'Recently Read', shelf_class: shelf_class, book_height: book_height %}
   {% elsif area == 'currently_reading' %}
@@ -429,7 +429,8 @@
 {% endtemplate %}
 
 {% template goals %}
-  {% for goal in goals limit:6 %}
+  {% assign rendered_goal_limit = goal_limit | default: 6 %}
+  {% for goal in goals limit:rendered_goal_limit %}
     {% render "goal_bar", goal:goal %}
   {% endfor %}
 {% endtemplate %}

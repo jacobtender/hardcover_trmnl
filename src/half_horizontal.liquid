@@ -12,7 +12,7 @@
       {% assign title = title | strip %}
 
       <div id="featuredArea" class="grid grid--cols-1 w--full h--full">
-        {% render 'featured_area', user: user, area: featured_area, shelf_class: 'bookshelf--compact', book_height: 150 %}
+        {% render 'featured_area', user: user, area: featured_area, shelf_class: 'bookshelf--compact', book_height: 150, goal_limit: 5 %}
       </div>
     {% else %}
       <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
