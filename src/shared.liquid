@@ -123,7 +123,7 @@
 {% template profile %}
   <div id="profile" class="flex flex--col">
     <div id="userInfo" class="flex flex--row flex--center gap--medium items--center stretch">
-      {% render "image", class: "profile__image rounded--small", image: image, height: 96 %}
+      {% render "image", class: "profile__image rounded--small image-stroke", image: image, height: 96 %}
       <div id="userMeta" class="grid grid--cols-1 gap--xsmall">
         <span id="profileName" class="value value--small">{{ name }}</span>
         <span id="bio" class="description clamp--4">{{ bio }}</span>
@@ -144,7 +144,7 @@
   {% assign normalisedHeight = height %}
   {% assign normalisedWidth = height | times: ratio %}
   {% assign url = image.url %}
-  <img class="image image-dither image-stroke {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=jpeg" {% if alt %}alt="{{ alt }}"{% endif %}>
+  <img class="image image-dither image--contain {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=jpeg" {% if alt %}alt="{{ alt }}"{% endif %}>
 {% endtemplate %}
 
 {% template pill %}
