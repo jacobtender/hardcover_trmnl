@@ -308,9 +308,7 @@
     {% assign count = 0 %}
 
     {% for i in (1..total) %}
-      {% assign seed = "now" | date: "%N" | plus: i %}
-      {% assign idx = seed | modulo: total %}
-      {% assign entry = user.want_to_read[idx] %}
+      {% assign entry = user.want_to_read | sample %}
       {% assign bid = entry.book.id | append: "" %}
       {% assign needle = "," | append: bid | append: "," %}
 
@@ -335,7 +333,13 @@
       {% else %}
         {% unless used_ids_csv contains needle %}
           {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
-          {% assign picks_idx_csv = picks_idx_csv | append: idx | append: "," %}
+          {% for candidate in user.want_to_read %}
+            {% if candidate.book.id == entry.book.id %}
+              {% assign sampled_idx = forloop.index0 %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% assign picks_idx_csv = picks_idx_csv | append: sampled_idx | append: "," %}
           {% assign count = count | plus: 1 %}
         {% endunless %}
       {% endif %}
@@ -350,6 +354,10 @@
         {% assign picks = picks | concat: pick %}
       {% endif %}
     {% endfor %}
+
+    {% if picks.size == 0 %}
+      {% assign picks = user.want_to_read | slice: 0, limit %}
+    {% endif %}
 
     {% render 'bookshelf', books: picks, title: 'Shuffle Want To Read', shelf_class: shelf_class, book_height: book_height %}
   {% else %}
@@ -385,14 +393,45 @@
     {% elsif content == 'shuffle_want_to_read' %}
       {% assign total = user.want_to_read | size %}
       {% if total > 0 %}
-        {% assign seed = "now" | date: "%N" %}
-        {% assign idx = seed | modulo: total %}
-        {% assign picks = user.want_to_read | slice: idx, 3 %}
-        {% if picks.size < 3 and total > picks.size %}
-          {% assign remaining = 3 | minus: picks.size %}
-          {% assign extra = user.want_to_read | slice: 0, remaining %}
-          {% assign picks = picks | concat: extra %}
+        {% assign limit = total | at_most: 3 %}
+        {% assign picks = "" | split: "" %}
+        {% assign used_ids_csv = "," %}
+        {% assign picks_idx_csv = "" %}
+        {% assign count = 0 %}
+
+        {% for i in (1..total) %}
+          {% assign entry = user.want_to_read | sample %}
+          {% assign bid = entry.book.id | append: "" %}
+          {% assign needle = "," | append: bid | append: "," %}
+
+          {% unless used_ids_csv contains needle %}
+            {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
+            {% for candidate in user.want_to_read %}
+              {% if candidate.book.id == entry.book.id %}
+                {% assign sampled_idx = forloop.index0 %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            {% assign picks_idx_csv = picks_idx_csv | append: sampled_idx | append: "," %}
+            {% assign count = count | plus: 1 %}
+          {% endunless %}
+
+          {% if count == limit %}{% break %}{% endif %}
+        {% endfor %}
+
+        {% assign picks_idx = picks_idx_csv | split: "," %}
+        {% for j in picks_idx %}
+          {% if j != "" %}
+            {% assign jn = j | plus: 0 %}
+            {% assign pick = user.want_to_read | slice: jn, 1 %}
+            {% assign picks = picks | concat: pick %}
+          {% endif %}
+        {% endfor %}
+
+        {% if picks.size == 0 %}
+          {% assign picks = user.want_to_read | slice: 0, limit %}
         {% endif %}
+
         {% render 'bookshelf', books: picks, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
       {% endif %}
     {% else %}
