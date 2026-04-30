@@ -135,6 +135,61 @@
     flex: 0 0 auto;
     color: #000;
   }
+
+  .progress-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 50px;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    font-size: 16px
+  }
+
+  .progress-label {
+    text-align: right;
+    padding-right: 8px;
+  }
+
+  .progress-track {
+    position: relative;
+    background: #f3f3f3;
+    height: 25px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: black;
+    transition: width 0.3s ease;
+  }
+
+  .progress-value {
+    font-weight: 700;
+    text-align: left;
+    min-width: 40px;
+  }
+
+  .progress-inside {
+    position: absolute;
+    top: 2px; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;       
+    color: black; 
+    z-index: 1;
+  }
+
+  .progress-fill + .progress-inside {
+    color: white;
+  }
 </style>
 
 {% template profile %}
@@ -362,28 +417,24 @@
 {% endtemplate %}
 
 {% template goals %}
-  <div class="grid grid--cols-1 gap--small w--full">
-    {% for goal in goals limit:6 %}
-      {% render "goal_bar", goal:goal %}
-    {% endfor %}
-  </div>
+  {% for goal in goals limit:6 %}
+    {% render "goal_bar", goal:goal %}
+  {% endfor %}
 {% endtemplate %}
 
 {% template goal_bar %}
   {% assign read_num = goal.read | plus: 0 %}
   {% assign goal_num = goal.goal | plus: 0 %}
 
-  {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
-
-  <div class="progress-bar progress-bar--small progress-bar--emphasis-2">
-    <div class="content">
-      <span class="label label--small clamp--1">{{ goal.title }}</span>
-      <span class="value value--xxsmall value--tnums">
-        {{ goal.read | round }} / {{ goal.goal }} {{ goal.metric }}s
+  <div class="progress-row value--xxsmall">
+    <span class="progress-label clamp--1">{{ goal.title }}</span>
+    <div class="progress-track bg--gray-4">
+      {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
+      <div class="progress-fill" style="width: {{ percent }}%;"></div>
+      <span class="progress-inside text-stroke text-stroke--medium text-stroke--black">
+        {{ goal.read | round }} of {{ goal.goal }} {{ goal.metric }}s
       </span>
     </div>
-    <div class="track">
-      <div class="fill" style="width: {{ percent }}%"></div>
-    </div>
+    <span class="progress-value value--tnums">{{ percent }}%</span>
   </div>
 {% endtemplate %}
