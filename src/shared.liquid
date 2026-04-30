@@ -3,16 +3,18 @@
     word-break: break-word;
     word-wrap: break-word;
   }
+
+  #profile {
+    min-width: 0;
+  }
+
   .pill {
-    border-radius: 5px;
-    /* background-color: rgb(203, 203, 203); */
     overflow: hidden;
-    gap: 2 !important;
   }
 
   .pill__label {
     text-align: center;
-    padding: 7px 0px 5px 5px;
+    padding: 7px 0 5px 5px;
     min-width: 100px;
   }
 
@@ -42,6 +44,7 @@
     overflow: hidden;  
     flex-wrap: nowrap;
     justify-content: space-evenly;
+    width: 100%;
   }
 
   .book__image-wrapper {
@@ -55,7 +58,6 @@
     height: 215px;
     max-width: 145px;
     overflow: hidden;
-    border-radius: 5px;
   }
 
   .book__image {
@@ -64,11 +66,6 @@
     height: auto;
     max-width: 100%;
     object-fit: contain;
-    border-radius: 5px;
-  }
-
-  .profile__image {
-    border-radius: 10%;
   }
 
   .rating-stars i {
@@ -80,7 +77,7 @@
     align-items: center;
   }
 
-  .progress-bar {
+  .book-progress {
     position: absolute;
     bottom: -1px;
     left: -1px;
@@ -89,110 +86,51 @@
     align-items: center;
     gap: 4px;
     padding: 2px 0 2px 1px;
-    background: white;
-    /* border-radius: 5px 5px 0 0 ; */
     font-size: 0.7rem;
     font-weight: 600;
   }
 
-  .progress-bar__icon {
+  .book-progress__icon {
     color: black;
     font-size: 0.85rem;
     flex: 0 0 auto;
     margin-right: 4px;
   }
 
-  .progress-bar__track {
+  .book-progress__track {
     flex: 1;
     height: 8px;
-    border-radius: 3px;
     overflow: hidden;
     position: relative;
   }
 
-  .progress-bar__fill {
+  .book-progress__fill {
     height: 100%;
     background: black;
     transition: width 0.3s ease;
   }
 
-  .progress-bar__text {
+  .book-progress__text {
     font-family: "Inter Variable", Inter;
     font-size: 0.85rem;
     font-weight: bold;
-
     margin-left: 4px;
     flex: 0 0 auto;
     color: #000;
-  }
-
-  .progress-row {
-    display: grid;
-    grid-template-columns: 200px 1fr 50px; /* label | bar | percent */
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    font-size: 16px
-  }
-
-  .progress-label {
-    text-align: right;  /* keeps edges aligned neatly */
-    padding-right: 8px;
-  }
-
-  .progress-track {
-    position: relative;
-    background: #f3f3f3;
-    height: 25px;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background: black;
-    transition: width 0.3s ease;
-  }
-
-  .progress-value {
-    font-weight: 700;
-    text-align: left;
-    min-width: 40px;
-  }
-
-  .progress-inside {
-    position: absolute;
-    top: 2px; 
-    bottom: 0;
-    left: 0;
-    right: 0;              /* stretch across */
-    display: flex;
-    align-items: center;
-    justify-content: center; /* center horizontally */
-    line-height: 1;       
-    color: black; 
-    z-index: 1;
-  }
-
-  .progress-fill + .progress-inside {
-    color: white;          /* when text overlaps the black bar */
   }
 </style>
 
 {% template profile %}
   <div id="profile" class="flex flex--col">
     <div id="userInfo" class="flex flex--row flex--center gap--medium items--center stretch">
-      {% render "image", class: "h--24 profile__image", image: image, height: 96 %}
+      {% render "image", class: "profile__image rounded--small", image: image, height: 96 %}
       <div id="userMeta" class="grid grid--cols-1 gap--xsmall">
         <span id="profileName" class="value value--small">{{ name }}</span>
         <span id="bio" class="description clamp--4">{{ bio }}</span>
       </div>
     </div>
 
-    <div id="followRelationships" class="flex flex--row flex--left w-full">
+    <div id="followRelationships" class="flex flex--row flex--left w--full">
       {% render 'pill', label: "Following", count: followed_users_count %}
       {% render 'pill', label: "Followers", count: followers_count %}
     </div>
@@ -206,22 +144,31 @@
   {% assign normalisedHeight = height %}
   {% assign normalisedWidth = height | times: ratio %}
   {% assign url = image.url %}
-  <img class="image-dither {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=webp" {% if alt %}alt="{{ alt }}"{% endif %}>
+  <img class="image image-dither image-stroke {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=jpeg" {% if alt %}alt="{{ alt }}"{% endif %}>
 {% endtemplate %}
 
 {% template pill %}
-  <div class="pill flex flex--row flex--right gap--[5px] stretch bg--gray-6">
+  <div class="pill flex flex--row flex--right gap--[5px] stretch rounded--xsmall bg--gray-70 2bit:bg--gray-55 4bit:bg--gray-65">
     <span class="pill__label value value--xxsmall text-stroke stretch">{{ label }}</span>
-    <span class="pill__count value value--xxsmall value--tnums" data-value-format="true">{{ count | default: 0 }}</span>
+    <span class="pill__count value value--xxsmall value--tnums bg--black text--white" data-value-format="true">{{ count | default: 0 }}</span>
   </div>
 {% endtemplate %}
 
 {% template pill_large %}
-  <div class="pill flex flex--col gap--[5px] bg--gray-6">
-    <div class="pill_large__count">
+  <div class="pill flex flex--col gap--[5px] rounded--xsmall bg--gray-70 2bit:bg--gray-55 4bit:bg--gray-65">
+    <div class="pill_large__count bg--black text--white">
       <span class="value value--small value--tnums" data-value-format="true">{{ count | default: 0  }}</span>
     </div>
     <span class="pill_large__label value value--xxsmall text-stroke">{{ label }}</span>
+  </div>
+{% endtemplate %}
+
+{% template stat_grid %}
+  <div id="TopStats" class="grid grid--cols-2 gap--small">
+    {% render 'pill_large', label: "Currently Reading", count: user.currently_reading_count.aggregate.count %}
+    {% render 'pill_large', label: "Books Read", count: user.read_count.aggregate.count %}
+    {% render 'pill_large', label: "Want To Read", count: user.want_to_read_count.aggregate.count %}
+    {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish_count.aggregate.count %}
   </div>
 {% endtemplate %}
 
@@ -238,7 +185,7 @@
     {% else %}
       {% assign title_bar_title = "Hardcover" %}
     {% endif %}
-    <span class="title">{{ title }}</span>
+    <span class="title">{{ title_bar_title }}</span>
     <span class="instance">@{{ username }}</span>
 
     {% if librarian.size > 0 %}
@@ -259,9 +206,9 @@
       {% for entry in books %}
         <div class="book">
           {% assign book = entry.book %}
-          <div class="book__image-wrapper">
+          <div class="book__image-wrapper rounded--xsmall">
             {% assign image = entry.edition.image | default: book.image %}
-            {% render "image", class: "book__image", image: image, height: 215, alt: book.title %}
+            {% render "image", class: "book__image rounded--xsmall", image: image, height: 215, alt: book.title %}
 
             {% if entry.user_book_reads[0].progress %}
               {% assign percent = entry.user_book_reads[0].progress | round %}
@@ -301,40 +248,44 @@
 {% endtemplate %}
 
 {% template progress_bar %}
-  <div class="progress-bar">
-    <span class="progress-bar__icon" data-pixel-perfect="true">
+  <div class="book-progress bg--white">
+    <span class="book-progress__icon" data-pixel-perfect="true">
       {% if format == "Listened" %}
         <i class="fa-solid fa-headphones"></i>
       {% else %}
         <i class="fa-solid fa-book"></i>
       {% endif %}
     </span>
-    <div class="progress-bar__track bg--gray-4">
-      <div class="progress-bar__fill" style="width: {{ percent | default: 0 }}%"></div>
+    <div class="book-progress__track rounded--xsmall bg--gray-70 2bit:bg--gray-55 4bit:bg--gray-65">
+      <div class="book-progress__fill" style="width: {{ percent | default: 0 }}%"></div>
     </div>
-    <span class="progress-bar__text" data-pixel-perfect="true">{{ percent | round }}%</span>
+    <span class="book-progress__text" data-pixel-perfect="true">{{ percent | round }}%</span>
   </div>
 {% endtemplate %}
 
 {% template goals %}
-  {% for goal in goals limit:6%}
-    {% render "goal_bar", goal:goal %}
-  {% endfor %}
+  <div class="grid grid--cols-1 gap--small w--full">
+    {% for goal in goals limit:6 %}
+      {% render "goal_bar", goal:goal %}
+    {% endfor %}
+  </div>
 {% endtemplate %}
 
 {% template goal_bar %}
   {% assign read_num = goal.read | plus: 0 %}
   {% assign goal_num = goal.goal | plus: 0 %}
 
-  <div class="progress-row value--xxsmall">
-    <span class="progress-label clamp--1">{{ goal.title }}</span>
-    <div class="progress-track bg--gray-4">
-      {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
-      <div class="progress-fill" style="width: {{ percent }}%;"></div>
-      <span class="progress-inside text-stroke text-stroke--medium text-stroke--black">
-        {{ goal.read | round }} of {{ goal.goal }} {{ goal.metric }}s
+  {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
+
+  <div class="progress-bar progress-bar--small progress-bar--emphasis-2">
+    <div class="content">
+      <span class="label label--small clamp--1">{{ goal.title }}</span>
+      <span class="value value--xxsmall value--tnums">
+        {{ goal.read | round }} / {{ goal.goal }} {{ goal.metric }}s
       </span>
     </div>
-    <span class="progress-value value--tnums">{{ percent }}%</span>
+    <div class="track">
+      <div class="fill" style="width: {{ percent }}%"></div>
+    </div>
   </div>
 {% endtemplate %}
