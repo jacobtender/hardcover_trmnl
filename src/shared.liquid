@@ -108,6 +108,11 @@
     display: none;
   }
 
+  .empty-state {
+    min-height: 120px;
+    width: 100%;
+  }
+
   .book__image {
     display: block;
     width: 100%;
@@ -295,9 +300,9 @@
   {% if area == 'goals' %}
     {% render 'goals', goals: user.goals, goal_limit: goal_limit %}
   {% elsif area == 'recently_read' %}
-    {% render 'bookshelf', books: user.recently_read, title: 'Recently Read', shelf_class: shelf_class, book_height: book_height %}
+    {% render 'bookshelf', books: user.recently_read, title: 'Recently Read', shelf_class: shelf_class, book_height: book_height, empty_message: 'No recently read books to show' %}
   {% elsif area == 'currently_reading' %}
-    {% render 'bookshelf', books: user.currently_reading, title: 'Currently Reading', shelf_class: shelf_class, book_height: book_height %}
+    {% render 'bookshelf', books: user.currently_reading, title: 'Currently Reading', shelf_class: shelf_class, book_height: book_height, empty_message: 'No currently reading books to show' %}
   {% elsif area == 'shuffle_want_to_read' %}
     {% assign total = user.want_to_read | size %}
     {% assign limit = total | at_most: 5 %}
@@ -359,7 +364,7 @@
       {% assign picks = user.want_to_read | slice: 0, limit %}
     {% endif %}
 
-    {% render 'bookshelf', books: picks, title: 'Shuffle Want To Read', shelf_class: shelf_class, book_height: book_height %}
+    {% render 'bookshelf', books: picks, title: 'Shuffle Want To Read', shelf_class: shelf_class, book_height: book_height, empty_message: 'No want to read books to show' %}
   {% else %}
     <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>
   {% endif %}
@@ -387,9 +392,9 @@
     {% elsif content == 'goals' %}
       {% render 'goals', goals: user.goals, goal_limit: 2 %}
     {% elsif content == 'currently_reading' %}
-      {% render 'bookshelf', books: user.currently_reading, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+      {% render 'bookshelf', books: user.currently_reading, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No current books' %}
     {% elsif content == 'recently_read' %}
-      {% render 'bookshelf', books: user.recently_read, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+      {% render 'bookshelf', books: user.recently_read, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No recent books' %}
     {% elsif content == 'shuffle_want_to_read' %}
       {% assign total = user.want_to_read | size %}
       {% if total > 0 %}
@@ -432,7 +437,9 @@
           {% assign picks = user.want_to_read | slice: 0, limit %}
         {% endif %}
 
-        {% render 'bookshelf', books: picks, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false %}
+        {% render 'bookshelf', books: picks, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No want to read books' %}
+      {% else %}
+        {% render 'empty_state', message: 'No want to read books' %}
       {% endif %}
     {% else %}
       {% render 'stat_grid', user: user %}
@@ -470,6 +477,9 @@
 {% template bookshelf %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+    {% if books == blank or books.size == 0 %}
+      {% render 'empty_state', message: empty_message | default: 'No books to show' %}
+    {% else %}
     <div class="bookshelf {{ shelf_class }} flex">
       {% assign rendered_book_limit = book_limit | default: 5 %}
       {% assign rendered_show_rating = true %}
@@ -519,6 +529,7 @@
         </div>
       {% endfor %}
     </div>
+    {% endif %}
 {% endtemplate %}
 
 {% template progress_bar %}
@@ -538,10 +549,20 @@
 {% endtemplate %}
 
 {% template goals %}
-  {% assign rendered_goal_limit = goal_limit | default: 6 %}
-  {% for goal in goals limit:rendered_goal_limit %}
-    {% render "goal_bar", goal:goal %}
-  {% endfor %}
+  {% if goals == blank or goals.size == 0 %}
+    {% render 'empty_state', message: 'No reading goals to show' %}
+  {% else %}
+    {% assign rendered_goal_limit = goal_limit | default: 6 %}
+    {% for goal in goals limit:rendered_goal_limit %}
+      {% render "goal_bar", goal:goal %}
+    {% endfor %}
+  {% endif %}
+{% endtemplate %}
+
+{% template empty_state %}
+  <div class="empty-state flex flex--col flex--center">
+    <span class="description">{{ message }}</span>
+  </div>
 {% endtemplate %}
 
 {% template goal_bar %}
