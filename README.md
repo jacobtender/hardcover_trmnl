@@ -31,6 +31,8 @@ watch:
 
 custom_fields:
   featuredArea: 'recently_read'
+  halfHorizontalContent: 'profile_information'
+  quadrantContent: 'stats'
   bearerToken: ""  # Add your bearer token here
 
 variables:
