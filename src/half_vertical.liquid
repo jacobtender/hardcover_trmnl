@@ -1,11 +1,18 @@
 {% assign user = IDX_0.data.me[0] %}
-<div class="layout layout--col layout--center gap--space-between">
-  <div id="topRow" class="grid w--full">
-    {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+{% if user %}
+  <div class="layout layout--col layout--center gap--space-between">
+    <div id="topRow" class="grid w--full">
+      {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+    </div>
+
+    <div class="divider"></div>
+
+    {% render 'stat_grid', user: user %}
   </div>
-
-  <div class="divider"></div>
-
-  {% render 'stat_grid', user: user %}
-</div>
-{% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
+  {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
+{% else %}
+  <div class="layout layout--col layout--center">
+    {% render 'hardcover_error', errors: IDX_0.errors %}
+  </div>
+  {% render 'title_bar', title: 'Hardcover Error' %}
+{% endif %}

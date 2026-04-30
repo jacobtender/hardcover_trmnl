@@ -152,7 +152,6 @@
 
   .progress-track {
     position: relative;
-    background: #f3f3f3;
     height: 25px;
     border-radius: 4px;
     overflow: hidden;
@@ -241,6 +240,19 @@
     {% render 'pill_large', label: "Books Read", count: user.read_count.aggregate.count %}
     {% render 'pill_large', label: "Want To Read", count: user.want_to_read_count.aggregate.count %}
     {% render 'pill_large', label: "Did Not Finish", count: user.did_not_finish_count.aggregate.count %}
+  </div>
+{% endtemplate %}
+
+{% template hardcover_error %}
+  <div class="flex flex--col flex--center gap--small w--full">
+    <span class="title title--small">Hardcover data unavailable</span>
+    {% if errors and errors.size > 0 %}
+      <span class="description clamp--3">{{ errors[0].message | default: errors[0] }}</span>
+    {% else %}
+      <span class="description clamp--3">
+        TRMNL could not load your Hardcover account data. Check the bearer token and plugin logs, then refresh the plugin.
+      </span>
+    {% endif %}
   </div>
 {% endtemplate %}
 
@@ -428,7 +440,7 @@
 
   <div class="progress-row value--xxsmall">
     <span class="progress-label clamp--1">{{ goal.title }}</span>
-    <div class="progress-track bg--gray-4">
+    <div class="progress-track bg--gray-70 2bit:bg--gray-55 4bit:bg--gray-65">
       {% assign percent = read_num | times: 100 | divided_by: goal_num | round %}
       <div class="progress-fill" style="width: {{ percent }}%;"></div>
       <span class="progress-inside text-stroke text-stroke--medium text-stroke--black">

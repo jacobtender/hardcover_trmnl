@@ -1,27 +1,37 @@
 {% assign user = IDX_0.data.me[0] %}
-{% assign half_horizontal_content = trmnl.plugin_settings.custom_fields_values.halfHorizontalContent | default: 'profile_information' %}
+{% assign half_horizontal_content_raw = trmnl.plugin_settings.custom_fields_values.halfHorizontalContent | default: 'profile_information' %}
+{% assign half_horizontal_content = half_horizontal_content_raw | downcase | replace: ' ', '_' %}
 {% assign title = '' %}
 
-<div class="layout layout--col layout--left layout--top">
+{% if user %}
+  <div class="layout layout--col layout--left layout--top">
+    {% if half_horizontal_content == 'featured_area' %}
+      {% assign featured_area_raw = trmnl.plugin_settings.custom_fields_values.featuredArea | default: 'goals' %}
+      {% assign featured_area = featured_area_raw | downcase | replace: ' ', '_' %}
+      {% capture title %}{% render 'featured_area_title', area: featured_area %}{% endcapture %}
+      {% assign title = title | strip %}
+
+      <div id="featuredArea" class="grid grid--cols-1 w--full h--full">
+        {% render 'featured_area', user: user, area: featured_area, shelf_class: 'bookshelf--compact', book_height: 150 %}
+      </div>
+    {% else %}
+      <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
+        {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+
+        {% render 'stat_grid', user: user %}
+      </div>
+    {% endif %}
+  </div>
+
   {% if half_horizontal_content == 'featured_area' %}
-    {% assign featured_area = trmnl.plugin_settings.custom_fields_values.featuredArea | default: 'goals' %}
-    {% capture title %}{% render 'featured_area_title', area: featured_area %}{% endcapture %}
-    {% assign title = title | strip %}
-
-    <div id="featuredArea" class="grid grid--cols-1 w--full h--full">
-      {% render 'featured_area', user: user, area: featured_area, shelf_class: 'bookshelf--compact', book_height: 150 %}
-    </div>
+    {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles, title: title %}
   {% else %}
-    <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
-      {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
-
-      {% render 'stat_grid', user: user %}
-    </div>
+    {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles %}
   {% endif %}
-</div>
-
-{% if half_horizontal_content == 'featured_area' %}
-  {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles, title: title %}
 {% else %}
-  {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles %}
+  <div class="layout layout--col layout--center">
+    {% render 'hardcover_error', errors: IDX_0.errors %}
+  </div>
+
+  {% render 'title_bar', title: 'Hardcover Error' %}
 {% endif %}

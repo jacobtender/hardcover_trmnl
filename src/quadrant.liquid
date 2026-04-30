@@ -1,5 +1,12 @@
 {% assign user = IDX_0.data.me[0] %}
-<div class="layout layout--col layout--center gap--space-between">
-  {% render 'stat_grid', user: user %}
-</div>
-{% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
+{% if user %}
+  <div class="layout layout--col layout--center gap--space-between">
+    {% render 'stat_grid', user: user %}
+  </div>
+  {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
+{% else %}
+  <div class="layout layout--col layout--center">
+    {% render 'hardcover_error', errors: IDX_0.errors %}
+  </div>
+  {% render 'title_bar', title: 'Hardcover Error' %}
+{% endif %}
