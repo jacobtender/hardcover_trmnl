@@ -6,79 +6,11 @@
     {% render 'stat_grid', user: user %}
   </div>
 
-  {% assign title = '' %}
+  {% assign featured_area = trmnl.plugin_settings.custom_fields_values.featuredArea | default: 'goals' %}
+  {% capture title %}{% render 'featured_area_title', area: featured_area %}{% endcapture %}
+  {% assign title = title | strip %}
   <div id="bottomRow" class="grid grid--cols-1 w--full">
-    {% if trmnl.plugin_settings.custom_fields_values.featuredArea == 'goals' %}
-      {% assign title = 'Reading Goals' %}
-      {% render 'goals', goals: user.goals %}
-    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'recently_read' %}
-      {% assign title = 'Recently Read' %}
-      {% render 'bookshelf', books: user.recently_read, title: 'Recently Read' %}
-    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'currently_reading' %}
-      {% assign title = 'Currently Reading' %}
-      {% render 'bookshelf', books: user.currently_reading, title: 'Currently Reading' %}
-    {% elsif trmnl.plugin_settings.custom_fields_values.featuredArea == 'shuffle_want_to_read' %}
-      {% assign title = 'Shuffle Want To Read' %}
-
-      {% assign total = user.want_to_read | size %}
-      {% assign limit = total | at_most: 5 %}
-      {% assign count = 0 %}
-      {% assign picks = "" | split: "" %}
-      {% assign used_ids_csv = "," %}
-      {% assign picks_idx_csv = "" %}
-      {% assign count = 0 %}
-
-      {% for i in (1..total) %}
-        {% assign seed = "now" | date: "%N" | plus: i %}
-        {% assign idx = seed | modulo: total %}
-        {% assign entry = user.want_to_read[idx] %}
-        {% assign bid = entry.book.id | append: "" %}
-        {% assign needle = "," | append: bid | append: "," %}
-
-        {% assign book_img = entry.book.image | default: "" %}
-        {% assign edition_img = entry.edition.image | default: "" %}
-        {% assign empty_edition_img = false %}
-        {% assign empty_book_img = false %}
-
-        <!-- If the book image or Edition image are empty, skip them. -->
-        {% if edition_img == "" or edition_img == "{}" %}
-          {% assign empty_edition_img = true %}
-          {% comment %} {{ entry.book.title }} has no edition image! {% endcomment %}
-        {% endif %}
-
-        {% if book_img == "" or book_img == "{}" %}
-          {% assign empty_book_img = true %}
-          {% comment %} {{ entry.book.title }} has no book image! {% endcomment %}
-        {% endif %}
-
-        {% if empty_edition_img and empty_book_img %}
-          {% comment %} {{ entry.book.title }} has no usable image! {% endcomment %}
-            {% continue %}
-        {% else %}
-          {% unless used_ids_csv contains needle %}
-            {% assign used_ids_csv = used_ids_csv | append: bid | append: "," %}
-            {% assign picks_idx_csv = picks_idx_csv | append: idx | append: "," %}
-            {% assign count = count | plus: 1 %}
-          {% endunless %}
-        {% endif %}
-        {% if count == limit %}{% break %}{% endif %}
-      {% endfor %}
-
-
-      {% assign picks_idx = picks_idx_csv | split: "," %}
-      {% for j in picks_idx %}
-        {% if j != "" %}
-          {% assign jn = j | plus: 0 %} <!-- Make sure the index is actually a number, not a string. This was hard to figure out. -->
-          {% assign pick = user.want_to_read | slice: jn, 1 %}
-          {% assign picks = picks | concat: pick %}
-        {% endif %}
-      {% endfor %}
-
-      {% render 'bookshelf', books: picks, title: 'Shuffle Want To Read' %}
-    {% else %}
-      {% assign title = 'Featured Area Not Set' %}
-      <span class="label col--span-2 col--center" data-pixel-perfect="true">Featured Area Not Set</span>
-    {% endif %}
+    {% render 'featured_area', user: user, area: featured_area %}
   </div>
 </div>
     

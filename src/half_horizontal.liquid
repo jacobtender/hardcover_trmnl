@@ -1,10 +1,27 @@
 {% assign user = IDX_0.data.me[0] %}
-<div class="layout layout--col layout--left layout--top">
-  <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
-    {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+{% assign half_horizontal_content = trmnl.plugin_settings.custom_fields_values.halfHorizontalContent | default: 'profile_information' %}
+{% assign title = '' %}
 
-    {% render 'stat_grid', user: user %}
-  </div>
+<div class="layout layout--col layout--left layout--top">
+  {% if half_horizontal_content == 'featured_area' %}
+    {% assign featured_area = trmnl.plugin_settings.custom_fields_values.featuredArea | default: 'goals' %}
+    {% capture title %}{% render 'featured_area_title', area: featured_area %}{% endcapture %}
+    {% assign title = title | strip %}
+
+    <div id="featuredArea" class="grid grid--cols-1 w--full h--full">
+      {% render 'featured_area', user: user, area: featured_area, shelf_class: 'bookshelf--compact', book_height: 150 %}
+    </div>
+  {% else %}
+    <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
+      {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
+
+      {% render 'stat_grid', user: user %}
+    </div>
+  {% endif %}
 </div>
 
-{% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles %}
+{% if half_horizontal_content == 'featured_area' %}
+  {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles, title: title %}
+{% else %}
+  {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles %}
+{% endif %}

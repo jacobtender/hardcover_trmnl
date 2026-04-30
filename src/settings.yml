@@ -4,6 +4,8 @@ no_screen_padding: 'no'
 dark_mode: 'no'
 static_data: ''
 polling_verb: post
+framework_version: 3.0.3
+serverless_language: 
 polling_url: |
   https://api.hardcover.app/v1/graphql
   https://www.randomnumberapi.com/api/v1.0/randomnumber
@@ -36,5 +38,13 @@ custom_fields:
   default: goals
   name: Featured Area
   description: Select what appears in the lower half in a full view.
+- keyname: halfHorizontalContent
+  field_type: select
+  options:
+  - Profile Information
+  - Featured Area
+  default: profile_information
+  name: Half Horizontal Content
+  description: Select what appears in a half horizontal view.
 name: Hardcover
 refresh_interval: 360
