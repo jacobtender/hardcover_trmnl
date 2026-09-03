@@ -334,6 +334,7 @@
     {% elsif content == 'recently_read' %}
       {% render 'bookshelf', books: user.recently_read, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No recent books' %}
     {% elsif content == 'shuffle_want_to_read' %}
+      {% if user.want_to_read.size > 0 %}
         {% render 'bookshelf', books: user.want_to_read, shelf_class: 'bookshelf--quadrant', book_height: 170, book_limit: 3, show_rating: false, empty_message: 'No want to read books' %}
       {% else %}
         {% render 'empty_state', message: 'No want to read books' %}
