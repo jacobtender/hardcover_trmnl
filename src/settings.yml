@@ -24,8 +24,11 @@ custom_fields:
 - keyname: bearerToken
   field_type: string
   name: Bearer Token
-  description: Copy value from https://hardcover.app/account/api/keys/new?scope=read%3Alibrary+read%3Alists+read%3Agoals+read%3Ame
+  description: Hardcover API Token
   placeholder: Bearer xxx
+  help_text: |
+    Create a new token in <a href="https://hardcover.app/account/api/keys/new?scope=read%3Alibrary+read%3Alists+read%3Agoals+read%3Ame">https://hardcover.app/account/api/keys/new</a>
+    (permissions pre-populated) and paste here, starting with Bearer like in the placeholder
 - keyname: featuredArea
   field_type: select
   options:
