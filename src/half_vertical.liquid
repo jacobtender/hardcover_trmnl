@@ -1,4 +1,4 @@
-{% assign user = IDX_0.data.me[0] %}
+{% assign user = data.me[0] %}
 {% assign quadrant_content_raw = trmnl.plugin_settings.custom_fields_values.quadrantContent | default: 'stats' %}
 {% assign quadrant_content = quadrant_content_raw | downcase | replace: ' ', '_' %}
 {% if user %}
@@ -12,7 +12,7 @@
   {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
 {% else %}
   <div class="layout layout--col layout--center">
-    {% render 'hardcover_error', errors: IDX_0.errors %}
+    {% render 'hardcover_error', errors: trmnl.errors %}
   </div>
   {% render 'title_bar', title: 'Hardcover Error' %}
 {% endif %}
