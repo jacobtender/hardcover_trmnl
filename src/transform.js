@@ -2,7 +2,7 @@ const hasImage = (book) => !!(book?.image?.url);
 
 function run(input) {
   const me = input?.data?.me;
-  if (!me?.length) return {};
+  if (!me?.length) return input;
 
   const eligibleBooks = me[0].want_to_read.filter(item => 
     hasImage(item.book) || hasImage(item.edition)
