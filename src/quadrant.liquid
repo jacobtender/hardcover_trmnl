@@ -8,7 +8,7 @@
   {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
 {% else %}
   <div class="layout layout--col layout--center">
-    {% render 'hardcover_error', errors: trmnl.errors %}
+    {% render 'hardcover_error', errors: errors %}
   </div>
   {% render 'title_bar', title: 'Hardcover Error' %}
 {% endif %}
