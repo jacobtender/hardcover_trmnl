@@ -75,5 +75,5 @@ custom_fields:
   name: Quadrant Content
   description: Select what appears in quadrant views and the lower half of half vertical views.
 name: Hardcover
-description: Display your Hardcover profile stats, reading goals, and shelves for recently read, currently reading, and want-to-read books.
+description: Hardcover reading dashboard
 refresh_interval: 360
