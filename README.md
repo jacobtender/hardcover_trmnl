@@ -33,14 +33,14 @@ custom_fields:
   featuredArea: 'recently_read'
   halfHorizontalContent: 'profile_information'
   quadrantContent: 'stats'
-  bearerToken: ""  # Add your bearer token here
+  hardcoverAPIKey: ""  # Add your Hardcover API key here, without the Bearer prefix
 
 variables:
   trmnl: {}
 ```
 
 **Note:**  
-`.trmnlp.yml` is gitignored by default. If you need to set sensitive or environment-specific values (like `bearerToken`), do so here.
+`.trmnlp.yml` is gitignored by default. If you need to set sensitive or environment-specific values (like `hardcoverAPIKey`), do so here.
 
 ### 4. Run TRMNLP
 
