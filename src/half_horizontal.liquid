@@ -1,9 +1,11 @@
-{% assign user = IDX_0.data.me[0] %}
+{% assign hardcover_data = IDX_0.data | default: data %}
+{% assign hardcover_errors = IDX_0.errors | default: errors %}
+{% assign user = hardcover_data.me[0] %}
 {% assign half_horizontal_content_raw = trmnl.plugin_settings.custom_fields_values.halfHorizontalContent | default: 'profile_information' %}
 {% assign half_horizontal_content = half_horizontal_content_raw | downcase | replace: ' ', '_' %}
 {% assign title = '' %}
 
-{% if user %}
+{% if hardcover_data != blank %}
   <div class="layout layout--col layout--left layout--top">
     {% if half_horizontal_content == 'featured_area' %}
       {% assign featured_area_raw = trmnl.plugin_settings.custom_fields_values.featuredArea | default: 'goals' %}
@@ -30,7 +32,7 @@
   {% endif %}
 {% else %}
   <div class="layout layout--col layout--center">
-    {% render 'hardcover_error', errors: IDX_0.errors %}
+    {% render 'hardcover_error', errors: hardcover_errors %}
   </div>
 
   {% render 'title_bar', title: 'Hardcover Error' %}

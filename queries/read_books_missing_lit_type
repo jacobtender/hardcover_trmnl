@@ -12,3 +12,18 @@ query missingLiteraryType {
     }
   }
 }
+
+query missingLiteraryType {
+  me {
+    user_books(where: {book: {literary_type_id: {_is_null: true}}}) {
+      book {
+        title
+        literary_type_id
+      }
+      reading_format {
+        id
+      }
+      status_id
+    }
+  }
+}

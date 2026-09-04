@@ -65,3 +65,6 @@ trmnlp push  # upload
 ## Contributing
 
 Feel free to open issues or pull requests!
+
+## TODO
+[ ] Implement the TMRNL MCP https://help.trmnl.com/en/articles/14130438-ai-agent

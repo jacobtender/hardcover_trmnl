@@ -1,7 +1,9 @@
-{% assign user = IDX_0.data.me[0] %}
+{% assign hardcover_data = IDX_0.data | default: data %}
+{% assign hardcover_errors = IDX_0.errors | default: errors %}
+{% assign user = hardcover_data.me[0] %}
 {% assign quadrant_content_raw = trmnl.plugin_settings.custom_fields_values.quadrantContent | default: 'stats' %}
 {% assign quadrant_content = quadrant_content_raw | downcase | replace: ' ', '_' %}
-{% if user %}
+{% if hardcover_data != blank %}
   <div class="layout layout--col layout--center gap--space-between">
     <div id="halfVerticalProfile" class="grid w--full p--small">
       {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
@@ -12,7 +14,7 @@
   {% render 'title_bar', username: user.username, flair: blank, librarian: blank %}
 {% else %}
   <div class="layout layout--col layout--center">
-    {% render 'hardcover_error', errors: IDX_0.errors %}
+    {% render 'hardcover_error', errors: hardcover_errors %}
   </div>
   {% render 'title_bar', title: 'Hardcover Error' %}
 {% endif %}

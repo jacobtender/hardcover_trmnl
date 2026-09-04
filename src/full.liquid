@@ -1,5 +1,7 @@
-{% assign user = IDX_0.data.me[0] %}
-{% if user %}
+{% assign hardcover_data = IDX_0.data | default: data %}
+{% assign hardcover_errors = IDX_0.errors | default: errors %}
+{% assign user = hardcover_data.me[0] %}
+{% if hardcover_data != blank %}
   <div class="layout layout--col layout--left layout--top gap--medium" > 
     <div id="topRow" class="grid grid--cols-2 gap--medium w--full">
       {% render 'profile', image: user.image, name: user.name, username: user.username, bio: user.bio, followed_users_count: user.followed_users_count, followers_count: user.followers_count %}
@@ -19,7 +21,7 @@
   {% render 'title_bar', username: user.username, flair: user.flair, librarian: user.librarian_roles, title: title %}
 {% else %}
   <div class="layout layout--col layout--center">
-    {% render 'hardcover_error', errors: IDX_0.errors %}
+    {% render 'hardcover_error', errors: hardcover_errors %}
   </div>
 
   {% render 'title_bar', title: 'Hardcover Error' %}
