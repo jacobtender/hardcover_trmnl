@@ -5,12 +5,31 @@ dark_mode: 'no'
 static_data: ''
 polling_verb: post
 framework_version: 3.0.3
-serverless_language: 
-polling_url: |
-  https://api.hardcover.app/v1/graphql
+serverless_language:
+polling_url: 'https://api.hardcover.app/v1/graphql'
 polling_headers: content-type=application/json&authorization=Bearer {{hardcoverAPIKey}}
 polling_body: '{"query":"query ($want_to_read_limit: Int = 100) {\nme {\nname\nid\nusername\nbio\nbooks_count\nflair\nlibrarian_roles\nfollowed_users_count\nfollowers_count\nimage: cached_image\nwant_to_read_count: user_books_aggregate(where: {status_id: {_eq: 1}}) {\naggregate {\ncount\n}\n}\ncurrently_reading_count: user_books_aggregate(where: {status_id: {_eq: 2}}) {\naggregate {\ncount\n}\n}\nread_count: user_books_aggregate(where: {status_id: {_eq: 3}}) {\naggregate {\ncount\n}\n}\ndid_not_finish_count: user_books_aggregate(where: {status_id: {_eq: 5}}) {\naggregate {\ncount\n}\n}\ngoals(where: {archived: {_eq: false}}) {\ntitle: description\nread: progress\ngoal\nstart_date\nend_date\ncompleted_at\nstate\nmetric\n}\ncurrently_reading: user_books(\nwhere: {status_id: {_eq: 2}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}\nlimit: 5\norder_by: {last_read_date: desc_nulls_last}\n) {\nbook {\ntitle\nimage: cached_image\n}\nedition {\nimage: cached_image\nreading_format {\nformat\n}\n}\nuser_book_reads {\nprogress\n}\nrating\nupdated_at\n}\nrecently_read: user_books(\nwhere: {status_id: {_eq: 3}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}\nlimit: 5\norder_by: {last_read_date: desc_nulls_last}\n) {\nbook {\ntitle\nimage: cached_image\n}\nedition {\nimage: cached_image\n}\nrating\nupdated_at\n}\nwant_to_read: user_books(\nwhere: {status_id: {_eq: 1}, _or: [{edition: {image: {url: {_is_null: false}}}}, {book: {image: {url: {_is_null: false}}}}]}\nlimit: $want_to_read_limit\norder_by: {date_added: asc}\n) {\nbook {\nid\ntitle\nimage: cached_image\n}\nedition {\nimage: cached_image\n}\n}\n}\n}"}'
 id: 63345
+oauth_enabled: 'false'
+oauth_pkce_enabled: 'no'
+oauth_authorize_url: ''
+oauth_token_url: ''
+oauth_scopes: ''
+oauth_scope_separator: ''
+oauth_refresh_url: ''
+oauth_auth_params: ''
+oauth_token_headers: ''
+oauth_token_site: ''
+oauth_token_params: ''
+oauth_token_request_auth_method: ''
+oauth_body_format: ''
+oauth_token_response_metadata: ''
+oauth_authorization_method: ''
+oauth_refresh_params: ''
+oauth_token_field_name: ''
+oauth_expiry_field_name: ''
+oauth_expiry_strategy: ''
+oauth_fixed_expiry_ms: ''
 custom_fields:
 - keyname: authorBio
   name: About This Plugin
@@ -56,4 +75,5 @@ custom_fields:
   name: Quadrant Content
   description: Select what appears in quadrant views and the lower half of half vertical views.
 name: Hardcover
+description: Display your Hardcover profile stats, reading goals, and shelves for recently read, currently reading, and want-to-read books.
 refresh_interval: 360
