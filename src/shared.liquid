@@ -282,13 +282,15 @@
   {% assign imageHeight = image.height | times: 1.0 %}
   {% assign imageWidth = image.width | times: 1.0 %}
   {% assign ratio = imageWidth | divided_by: imageHeight %}
-  {% assign normalisedHeight = height %}
-  {% assign normalisedWidth = height | times: ratio %}
+  {% assign normalisedHeight = height | round %}
+  {% assign normalisedWidth = height | times: ratio | round %}
   {% assign url = image.url %}
   {% if crop == "square" %}
-    {% assign normalisedWidth = height %}
+    {% assign normalisedWidth = height | round %}
   {% endif %}
-  <img class="image image-dither {% unless crop == 'square' %}image--contain{% endunless %} {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=jpeg" {% if alt %}alt="{{ alt }}"{% endif %}>
+  {% if url and url != '' %}
+    <img class="image image-dither {% unless crop == 'square' %}image--contain{% endunless %} {{ class }}" src="https://img.hardcover.app/enlarge?url={{ url }}&width={{ normalisedWidth }}&height={{ normalisedHeight }}&type=jpeg" {% if alt %}alt="{{ alt }}"{% endif %}>
+  {% endif %}
 {% endtemplate %}
 
 {% template pill %}
